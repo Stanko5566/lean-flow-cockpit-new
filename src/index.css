@@ -1,4 +1,3 @@
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -43,6 +42,25 @@
     --sidebar-accent-foreground: 216 12% 34%;
     --sidebar-border: 0 0% 89%;
     --sidebar-ring: 197 74% 49%;
+
+    /* Kaizen Board Colors - Light Mode */
+    --kaizen-open-bg: 60 100% 97%;
+    --kaizen-open-header: 60 100% 95%;
+    --kaizen-open-border: 60 100% 70%;
+    --kaizen-open-card-bg: 0 0% 100%;
+    --kaizen-open-card-border: 60 100% 90%;
+    
+    --kaizen-progress-bg: 217 100% 97%; 
+    --kaizen-progress-header: 217 100% 95%;
+    --kaizen-progress-border: 217 80% 70%;
+    --kaizen-progress-card-bg: 0 0% 100%;
+    --kaizen-progress-card-border: 217 80% 90%;
+    
+    --kaizen-completed-bg: 120 100% 97%;
+    --kaizen-completed-header: 120 100% 95%;
+    --kaizen-completed-border: 120 70% 70%;
+    --kaizen-completed-card-bg: 0 0% 100%;
+    --kaizen-completed-card-border: 120 70% 90%;
   }
 
   .dark {
@@ -82,6 +100,25 @@
     --sidebar-accent-foreground: 0 0% 95%;
     --sidebar-border: 216 10% 22%;
     --sidebar-ring: 197 74% 49%;
+
+    /* Kaizen Board Colors - Dark Mode */
+    --kaizen-open-bg: 60 50% 10%;
+    --kaizen-open-header: 60 30% 15%;
+    --kaizen-open-border: 60 80% 30%;
+    --kaizen-open-card-bg: 60 15% 15%;
+    --kaizen-open-card-border: 60 30% 30%;
+    
+    --kaizen-progress-bg: 217 50% 10%;
+    --kaizen-progress-header: 217 30% 15%;
+    --kaizen-progress-border: 217 80% 30%;
+    --kaizen-progress-card-bg: 217 15% 15%;
+    --kaizen-progress-card-border: 217 30% 30%;
+    
+    --kaizen-completed-bg: 120 30% 10%;
+    --kaizen-completed-header: 120 20% 15%;
+    --kaizen-completed-border: 120 50% 30%;
+    --kaizen-completed-card-bg: 120 15% 15%;
+    --kaizen-completed-card-border: 120 30% 30%;
   }
 }
 
@@ -118,5 +155,42 @@
 
   .dashboard-grid {
     @apply grid gap-4 md:grid-cols-2 lg:grid-cols-3;
+  }
+
+  /* Kaizen Board styles */
+  .kaizen-card-open {
+    @apply border-2 border-[hsl(var(--kaizen-open-border))] bg-[hsl(var(--kaizen-open-bg))];
+  }
+  
+  .kaizen-card-header-open {
+    @apply bg-[hsl(var(--kaizen-open-header))];
+  }
+  
+  .kaizen-card-item-open {
+    @apply border border-[hsl(var(--kaizen-open-card-border))] bg-[hsl(var(--kaizen-open-card-bg))] shadow;
+  }
+  
+  .kaizen-card-progress {
+    @apply border-2 border-[hsl(var(--kaizen-progress-border))] bg-[hsl(var(--kaizen-progress-bg))];
+  }
+  
+  .kaizen-card-header-progress {
+    @apply bg-[hsl(var(--kaizen-progress-header))];
+  }
+  
+  .kaizen-card-item-progress {
+    @apply border border-[hsl(var(--kaizen-progress-card-border))] bg-[hsl(var(--kaizen-progress-card-bg))] shadow;
+  }
+  
+  .kaizen-card-completed {
+    @apply border-2 border-[hsl(var(--kaizen-completed-border))] bg-[hsl(var(--kaizen-completed-bg))];
+  }
+  
+  .kaizen-card-header-completed {
+    @apply bg-[hsl(var(--kaizen-completed-header))];
+  }
+  
+  .kaizen-card-item-completed {
+    @apply border border-[hsl(var(--kaizen-completed-card-border))] bg-[hsl(var(--kaizen-completed-card-bg))] shadow;
   }
 }

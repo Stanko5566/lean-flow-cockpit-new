@@ -38,6 +38,7 @@ import {
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
+import { cn } from "@/lib/utils";
 
 const formSchema = z.object({
   title: z.string().min(2, "Der Titel muss mindestens 2 Zeichen haben"),
@@ -226,17 +227,20 @@ const KaizenPage = () => {
         </div>
       ) : (
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-          <Card className="bg-yellow-50">
-            <CardHeader>
+          <Card className="kaizen-card-open">
+            <CardHeader className="kaizen-card-header-open">
               <CardTitle>Offen</CardTitle>
               <CardDescription>Neue Verbesserungsvorschläge</CardDescription>
             </CardHeader>
-            <CardContent className="space-y-4">
+            <CardContent className="space-y-4 pt-4">
               {getItemsByStatus('open').map((item) => (
-                <div key={item.id} className="rounded-lg border bg-white p-3">
+                <div 
+                  key={item.id} 
+                  className="kaizen-card-item-open rounded-lg p-3"
+                >
                   <div className="flex justify-between items-start">
                     <div>
-                      <h3 className="font-medium">{item.title}</h3>
+                      <h3 className="font-medium text-foreground">{item.title}</h3>
                       <p className="text-sm text-muted-foreground">
                         {item.description}
                       </p>
@@ -273,17 +277,20 @@ const KaizenPage = () => {
             </CardContent>
           </Card>
 
-          <Card className="bg-blue-50">
-            <CardHeader>
+          <Card className="kaizen-card-progress">
+            <CardHeader className="kaizen-card-header-progress">
               <CardTitle>In Bearbeitung</CardTitle>
               <CardDescription>Aktuelle Umsetzungen</CardDescription>
             </CardHeader>
-            <CardContent className="space-y-4">
+            <CardContent className="space-y-4 pt-4">
               {getItemsByStatus('in_progress').map((item) => (
-                <div key={item.id} className="rounded-lg border bg-white p-3">
+                <div 
+                  key={item.id} 
+                  className="kaizen-card-item-progress rounded-lg p-3"
+                >
                   <div className="flex justify-between items-start">
                     <div>
-                      <h3 className="font-medium">{item.title}</h3>
+                      <h3 className="font-medium text-foreground">{item.title}</h3>
                       <p className="text-sm text-muted-foreground">
                         {item.description}
                       </p>
@@ -320,23 +327,26 @@ const KaizenPage = () => {
             </CardContent>
           </Card>
 
-          <Card className="bg-green-50">
-            <CardHeader>
+          <Card className="kaizen-card-completed">
+            <CardHeader className="kaizen-card-header-completed">
               <CardTitle>Abgeschlossen</CardTitle>
               <CardDescription>Umgesetzte Verbesserungen</CardDescription>
             </CardHeader>
-            <CardContent className="space-y-4">
+            <CardContent className="space-y-4 pt-4">
               {getItemsByStatus('completed').map((item) => (
-                <div key={item.id} className="rounded-lg border bg-white p-3">
+                <div 
+                  key={item.id} 
+                  className="kaizen-card-item-completed rounded-lg p-3"
+                >
                   <div className="flex justify-between items-start">
                     <div>
-                      <h3 className="font-medium">{item.title}</h3>
+                      <h3 className="font-medium text-foreground">{item.title}</h3>
                       <p className="text-sm text-muted-foreground">
                         {item.description}
                       </p>
                       {item.completion_date && (
                         <div className="mt-2 text-xs text-muted-foreground">
-                          Abgeschlossen am: {new Date(item.completion_date).toLocaleDateString('de-DE')}
+                          Abgeschlossen am: {new Date(item.completion_date).toLocaleDateString()}
                         </div>
                       )}
                     </div>
