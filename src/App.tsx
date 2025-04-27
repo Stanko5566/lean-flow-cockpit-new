@@ -23,42 +23,50 @@ import SettingsPage from "./pages/SettingsPage";
 import ProtectedRoute from "./components/auth/ProtectedRoute";
 import AdminDashboard from "./pages/AdminDashboard";
 
+// Import i18n initialization
+import "./i18n";
+
 const queryClient = new QueryClient();
 
-const App = () => (
-  <QueryClientProvider client={queryClient}>
-    <BrowserRouter>
+const App = () => {
+  return (
+    <QueryClientProvider client={queryClient}>
       <AuthProvider>
         <TooltipProvider>
+          <BrowserRouter>
+            <Routes>
+              <Route path="/login" element={<LoginPage />} />
+              <Route
+                path="/"
+                element={
+                  <ProtectedRoute>
+                    <Layout />
+                  </ProtectedRoute>
+                }
+              >
+                <Route index element={<Dashboard />} />
+                <Route path="pdca" element={<PdcaPage />} />
+                <Route path="5s" element={<FiveS />} />
+                <Route path="kaizen" element={<KaizenPage />} />
+                <Route path="valuestream" element={<ValueStreamPage />} />
+                <Route path="kanban" element={<KanbanPage />} />
+                <Route path="andon" element={<AndonPage />} />
+                <Route path="gemba" element={<GembaPage />} />
+                <Route path="standards" element={<StandardWork />} />
+                <Route path="a3" element={<A3Page />} />
+                <Route path="tpm" element={<TpmPage />} />
+                <Route path="settings" element={<SettingsPage />} />
+                <Route path="admin" element={<AdminDashboard />} />
+              </Route>
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+          </BrowserRouter>
           <Toaster />
           <Sonner />
-          <Routes>
-            <Route path="/login" element={<LoginPage />} />
-            <Route path="/" element={
-              <ProtectedRoute>
-                <Layout />
-              </ProtectedRoute>
-            }>
-              <Route index element={<Dashboard />} />
-              <Route path="pdca" element={<PdcaPage />} />
-              <Route path="5s" element={<FiveS />} />
-              <Route path="kaizen" element={<KaizenPage />} />
-              <Route path="valuestream" element={<ValueStreamPage />} />
-              <Route path="kanban" element={<KanbanPage />} />
-              <Route path="andon" element={<AndonPage />} />
-              <Route path="gemba" element={<GembaPage />} />
-              <Route path="standards" element={<StandardWork />} />
-              <Route path="a3" element={<A3Page />} />
-              <Route path="tpm" element={<TpmPage />} />
-              <Route path="settings" element={<SettingsPage />} />
-              <Route path="admin" element={<AdminDashboard />} />
-              <Route path="*" element={<NotFound />} />
-            </Route>
-          </Routes>
         </TooltipProvider>
       </AuthProvider>
-    </BrowserRouter>
-  </QueryClientProvider>
-);
+    </QueryClientProvider>
+  );
+};
 
 export default App;

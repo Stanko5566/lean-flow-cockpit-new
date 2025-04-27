@@ -1,0 +1,100 @@
+{
+  "common": {
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "loading": "Loading...",
+    "submit": "Submit",
+    "edit": "Edit",
+    "back": "Back",
+    "next": "Next",
+    "previous": "Previous",
+    "confirm": "Confirm",
+    "yes": "Yes",
+    "no": "No"
+  },
+  "sidebar": {
+    "dashboard": "Dashboard",
+    "pdca": "PDCA",
+    "fiveS": "5S",
+    "kaizen": "Kaizen",
+    "valuestream": "Value Stream",
+    "kanban": "Kanban",
+    "andon": "Andon",
+    "gemba": "Gemba",
+    "standards": "Standards",
+    "a3": "A3",
+    "tpm": "TPM",
+    "settings": "Settings",
+    "overview": "Overview",
+    "methods": "Methods",
+    "system": "System",
+    "manageMenu": "Manage Menu",
+    "collapseMenu": "Collapse Menu"
+  },
+  "settings": {
+    "title": "Settings",
+    "profile": {
+      "title": "Profile Information",
+      "emailLabel": "Email Address",
+      "emailReadOnly": "Your email address cannot be changed",
+      "companyLabel": "Company",
+      "companyPlaceholder": "Your Company",
+      "positionLabel": "Position",
+      "positionPlaceholder": "Your Position",
+      "phoneLabel": "Phone Number",
+      "phonePlaceholder": "Your Phone Number",
+      "saveButton": "Save Profile Information"
+    },
+    "password": {
+      "title": "Change Password",
+      "currentPassword": "Current Password",
+      "newPassword": "New Password",
+      "confirmPassword": "Confirm Password",
+      "changeButton": "Change Password",
+      "error": {
+        "emptyFields": "Please fill in all fields",
+        "passwordMismatch": "New passwords do not match",
+        "changeFailed": "Password change failed"
+      },
+      "success": "Password has been successfully changed"
+    },
+    "appearance": {
+      "title": "Appearance Options",
+      "darkMode": "Dark Mode"
+    },
+    "account": {
+      "title": "Account",
+      "adminDashboard": "Open Admin Dashboard",
+      "loggedInAs": "Logged in as:",
+      "signOut": "Sign Out"
+    },
+    "language": {
+      "title": "Language",
+      "selectLanguage": "Select Language",
+      "english": "English",
+      "german": "German"
+    }
+  },
+  "auth": {
+    "login": "Login",
+    "register": "Register",
+    "email": "Email",
+    "password": "Password",
+    "forgotPassword": "Forgot Password?",
+    "noAccount": "Don't have an account?",
+    "haveAccount": "Already have an account?",
+    "signIn": "Sign In",
+    "signUp": "Sign Up",
+    "signOut": "Sign Out",
+    "error": {
+      "invalidCredentials": "Invalid email or password",
+      "emailRequired": "Email is required",
+      "passwordRequired": "Password is required"
+    }
+  },
+  "profile": {
+    "updateError": "Profile update failed",
+    "updateSuccess": "Profile successfully updated"
+  }
+} 

@@ -1,0 +1,100 @@
+{
+  "common": {
+    "save": "Speichern",
+    "cancel": "Abbrechen",
+    "delete": "Löschen",
+    "loading": "Laden...",
+    "submit": "Absenden",
+    "edit": "Bearbeiten",
+    "back": "Zurück",
+    "next": "Weiter",
+    "previous": "Zurück",
+    "confirm": "Bestätigen",
+    "yes": "Ja",
+    "no": "Nein"
+  },
+  "sidebar": {
+    "dashboard": "Dashboard",
+    "pdca": "PDCA",
+    "fiveS": "5S",
+    "kaizen": "Kaizen",
+    "valuestream": "Wertstrom",
+    "kanban": "Kanban",
+    "andon": "Andon",
+    "gemba": "Gemba",
+    "standards": "Standards",
+    "a3": "A3",
+    "tpm": "TPM",
+    "settings": "Einstellungen",
+    "overview": "Übersicht",
+    "methods": "Methoden",
+    "system": "System",
+    "manageMenu": "Menü verwalten",
+    "collapseMenu": "Menü einklappen"
+  },
+  "settings": {
+    "title": "Einstellungen",
+    "profile": {
+      "title": "Profilinformationen",
+      "emailLabel": "E-Mail-Adresse",
+      "emailReadOnly": "Ihre E-Mail-Adresse kann nicht geändert werden",
+      "companyLabel": "Unternehmen",
+      "companyPlaceholder": "Ihr Unternehmen",
+      "positionLabel": "Position",
+      "positionPlaceholder": "Ihre Position",
+      "phoneLabel": "Telefonnummer",
+      "phonePlaceholder": "Ihre Telefonnummer",
+      "saveButton": "Profilinformationen speichern"
+    },
+    "password": {
+      "title": "Passwort ändern",
+      "currentPassword": "Aktuelles Passwort",
+      "newPassword": "Neues Passwort",
+      "confirmPassword": "Passwort bestätigen",
+      "changeButton": "Passwort ändern",
+      "error": {
+        "emptyFields": "Bitte füllen Sie alle Felder aus",
+        "passwordMismatch": "Die neuen Passwörter stimmen nicht überein",
+        "changeFailed": "Passwortänderung fehlgeschlagen"
+      },
+      "success": "Passwort wurde erfolgreich geändert"
+    },
+    "appearance": {
+      "title": "Darstellungsoptionen",
+      "darkMode": "Dunkler Modus"
+    },
+    "account": {
+      "title": "Konto",
+      "adminDashboard": "Admin Dashboard öffnen",
+      "loggedInAs": "Angemeldet als:",
+      "signOut": "Abmelden"
+    },
+    "language": {
+      "title": "Sprache",
+      "selectLanguage": "Sprache auswählen",
+      "english": "Englisch",
+      "german": "Deutsch"
+    }
+  },
+  "auth": {
+    "login": "Anmelden",
+    "register": "Registrieren",
+    "email": "E-Mail",
+    "password": "Passwort",
+    "forgotPassword": "Passwort vergessen?",
+    "noAccount": "Noch kein Konto?",
+    "haveAccount": "Bereits ein Konto?",
+    "signIn": "Anmelden",
+    "signUp": "Registrieren",
+    "signOut": "Abmelden",
+    "error": {
+      "invalidCredentials": "Ungültige E-Mail oder Passwort",
+      "emailRequired": "E-Mail ist erforderlich",
+      "passwordRequired": "Passwort ist erforderlich"
+    }
+  },
+  "profile": {
+    "updateError": "Profilaktualisierung fehlgeschlagen",
+    "updateSuccess": "Profil erfolgreich aktualisiert"
+  }
+} 
