@@ -9,14 +9,17 @@ export interface GembaWalk {
   created_at: string;
   updated_at: string;
   observations: string[];
-  area: string;
+  location?: string;
+  area?: string;
+  walk_date?: string;
 }
 
 export interface CreateGembaWalkDto {
   title: string;
   description: string;
   observations: string[];
-  area: string;
+  location?: string;
+  area?: string;
 }
 
 export const useGembaWalks = () => {
@@ -24,45 +27,126 @@ export const useGembaWalks = () => {
   const { toast } = useToast();
 
   const fetchWalks = async (): Promise<GembaWalk[]> => {
-    const { data, error } = await supabase
-      .from('gemba_walks')
-      .select('*')
-      .order('created_at', { ascending: false });
-    
-    if (error) throw error;
-    return data || [];
+    try {
+      const { data: tableInfo, error: tableError } = await supabase
+        .from('gemba_walks')
+        .select('*')
+        .limit(1);
+      
+      if (tableError) {
+        console.error('Error fetching table info:', tableError);
+        throw tableError;
+      }
+      
+      console.log('Table column names:', tableInfo && tableInfo.length > 0 ? Object.keys(tableInfo[0]) : 'No data');
+      
+      const { data: walksData, error: walksError } = await supabase
+        .from('gemba_walks')
+        .select('*')
+        .order('created_at', { ascending: false });
+      
+      if (walksError) {
+        console.error('Error fetching walks:', walksError);
+        throw walksError;
+      }
+      
+      return walksData.map(walk => {
+        return {
+          id: walk.id,
+          title: walk.title || '',
+          description: walk.description || '',
+          created_at: walk.created_at,
+          updated_at: walk.updated_at || walk.created_at,
+          observations: Array.isArray(walk.observations) ? walk.observations : 
+                        (typeof walk.observations === 'object' ? Object.values(walk.observations || {}) : []),
+          location: walk.location,
+          area: walk.area || walk.location,
+          walk_date: walk.walk_date,
+        };
+      }) || [];
+    } catch (error) {
+      console.error('Error in fetchWalks:', error);
+      throw error;
+    }
   };
 
   const createWalk = async (walk: CreateGembaWalkDto): Promise<GembaWalk> => {
-    const { data, error } = await supabase
-      .from('gemba_walks')
-      .insert([walk])
-      .select()
-      .single();
-    
-    if (error) throw error;
-    return data;
+    try {
+      const walkData = {
+        title: walk.title,
+        description: walk.description,
+        observations: walk.observations,
+        ...(walk.area ? { area: walk.area } : {}),
+        ...(walk.location ? { location: walk.location } : {}),
+        ...(walk.area && walk.location ? {} : { location: walk.area, area: walk.location }),
+      };
+      
+      console.log('Creating walk with data:', walkData);
+      
+      const { data: createdWalk, error: createError } = await supabase
+        .from('gemba_walks')
+        .insert([walkData])
+        .select()
+        .single();
+      
+      if (createError) {
+        console.error('Error creating walk:', createError);
+        throw createError;
+      }
+      
+      return createdWalk;
+    } catch (error) {
+      console.error('Error in createWalk:', error);
+      throw error;
+    }
   };
 
   const updateWalk = async (id: string, updates: Partial<GembaWalk>): Promise<GembaWalk> => {
-    const { data, error } = await supabase
-      .from('gemba_walks')
-      .update(updates)
-      .eq('id', id)
-      .select()
-      .single();
-    
-    if (error) throw error;
-    return data;
+    try {
+      const walkUpdates = {
+        ...(updates.title ? { title: updates.title } : {}),
+        ...(updates.description ? { description: updates.description } : {}),
+        ...(updates.observations ? { observations: updates.observations } : {}),
+        ...(updates.area ? { area: updates.area } : {}),
+        ...(updates.location ? { location: updates.location } : {}),
+      };
+      
+      console.log('Updating walk with data:', walkUpdates);
+      
+      const { data: updatedWalk, error: updateError } = await supabase
+        .from('gemba_walks')
+        .update(walkUpdates)
+        .eq('id', id)
+        .select()
+        .single();
+      
+      if (updateError) {
+        console.error('Error updating walk:', updateError);
+        throw updateError;
+      }
+      
+      return updatedWalk;
+    } catch (error) {
+      console.error('Error in updateWalk:', error);
+      throw error;
+    }
   };
 
   const deleteWalk = async (id: string): Promise<void> => {
-    const { error } = await supabase
-      .from('gemba_walks')
-      .delete()
-      .eq('id', id);
-    
-    if (error) throw error;
+    try {
+      const { error: deleteError } = await supabase
+        .from('gemba_walks')
+        .delete()
+        .eq('id', id);
+      
+      if (deleteError) {
+        console.error('Error deleting walk:', deleteError);
+        throw deleteError;
+      }
+    } catch (error) {
+      console.error('Error in deleteWalk:', error);
+      throw error;
+    }
   };
 
   const walksQuery = useQuery({
@@ -79,10 +163,11 @@ export const useGembaWalks = () => {
         description: "Gemba Walk wurde erstellt",
       });
     },
-    onError: (error: Error) => {
+    onError: (error: any) => {
+      console.error('Error in createWalkMutation:', error);
       toast({
         title: "Fehler",
-        description: `Fehler beim Erstellen des Gemba Walks: ${error.message}`,
+        description: `Fehler beim Erstellen des Gemba Walks: ${error.message || error}`,
         variant: "destructive",
       });
     },
@@ -98,10 +183,11 @@ export const useGembaWalks = () => {
         description: "Gemba Walk wurde aktualisiert",
       });
     },
-    onError: (error: Error) => {
+    onError: (error: any) => {
+      console.error('Error in updateWalkMutation:', error);
       toast({
         title: "Fehler",
-        description: `Fehler beim Aktualisieren des Gemba Walks: ${error.message}`,
+        description: `Fehler beim Aktualisieren des Gemba Walks: ${error.message || error}`,
         variant: "destructive",
       });
     },
@@ -116,10 +202,11 @@ export const useGembaWalks = () => {
         description: "Gemba Walk wurde gelöscht",
       });
     },
-    onError: (error: Error) => {
+    onError: (error: any) => {
+      console.error('Error in deleteWalkMutation:', error);
       toast({
         title: "Fehler",
-        description: `Fehler beim Löschen des Gemba Walks: ${error.message}`,
+        description: `Fehler beim Löschen des Gemba Walks: ${error.message || error}`,
         variant: "destructive",
       });
     },

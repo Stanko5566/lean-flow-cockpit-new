@@ -10,9 +10,11 @@ import {
 import { useGembaWalks } from "@/hooks/useGembaWalks";
 import { Button } from "@/components/ui/button";
 import { CreateGembaDialog } from "@/components/gemba/CreateGembaDialog";
+import { useToast } from "@/hooks/use-toast";
 
 const GembaPage = () => {
   const { walks, isLoading, deleteWalk } = useGembaWalks();
+  const { toast } = useToast();
 
   const handleDelete = (id: string, title: string) => {
     if (window.confirm(`Sind Sie sicher, dass Sie "${title}" löschen möchten?`)) {
