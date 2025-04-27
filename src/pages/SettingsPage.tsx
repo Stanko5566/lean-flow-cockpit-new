@@ -16,8 +16,17 @@ import { useAuth } from '@/contexts/AuthContext';
 import { Input } from "@/components/ui/input";
 import { supabase } from '@/lib/supabase';
 import { useToast } from '@/hooks/use-toast';
-import { Loader2, User, Key, Moon, LogOut } from 'lucide-react';
+import { Loader2, User, Key, Moon, LogOut, Globe } from 'lucide-react';
 import { useUserProfile } from '@/hooks/useUserProfile';
+import { useTranslation } from 'react-i18next';
+import { useLanguage, Language } from '@/hooks/useLanguage';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 const SettingsPage = () => {
   const { theme, toggleTheme } = useTheme();
@@ -25,6 +34,8 @@ const SettingsPage = () => {
   const { user, signOut } = useAuth();
   const { toast } = useToast();
   const { profile, loading: profileLoading, updateProfile } = useUserProfile();
+  const { t } = useTranslation();
+  const { currentLanguage, changeLanguage } = useLanguage();
   
   // Password states
   const [currentPassword, setCurrentPassword] = useState('');
@@ -50,8 +61,8 @@ const SettingsPage = () => {
   const handlePasswordChange = async () => {
     if (!currentPassword || !newPassword || !confirmPassword) {
       toast({
-        title: "Fehler",
-        description: "Bitte füllen Sie alle Felder aus",
+        title: t('settings.password.error.emptyFields'),
+        description: t('settings.password.error.emptyFields'),
         variant: "destructive"
       });
       return;
@@ -59,8 +70,8 @@ const SettingsPage = () => {
     
     if (newPassword !== confirmPassword) {
       toast({
-        title: "Fehler",
-        description: "Die neuen Passwörter stimmen nicht überein",
+        title: t('settings.password.error.passwordMismatch'),
+        description: t('settings.password.error.passwordMismatch'),
         variant: "destructive"
       });
       return;
@@ -76,8 +87,8 @@ const SettingsPage = () => {
       if (error) throw error;
       
       toast({
-        title: "Erfolg",
-        description: "Passwort wurde erfolgreich geändert"
+        title: t('common.success'),
+        description: t('settings.password.success')
       });
       
       // Clear form
@@ -87,8 +98,8 @@ const SettingsPage = () => {
       
     } catch (error: any) {
       toast({
-        title: "Fehler",
-        description: error.message || "Passwortänderung fehlgeschlagen",
+        title: t('common.error'),
+        description: error.message || t('settings.password.error.changeFailed'),
         variant: "destructive"
       });
     } finally {
@@ -106,12 +117,12 @@ const SettingsPage = () => {
         phone
       });
       
-      if (!success) throw new Error("Profilaktualisierung fehlgeschlagen");
+      if (!success) throw new Error(t('profile.updateError'));
       
     } catch (error: any) {
       toast({
-        title: "Fehler",
-        description: error.message || "Aktualisierung fehlgeschlagen",
+        title: t('common.error'),
+        description: error.message || t('profile.updateError'),
         variant: "destructive"
       });
     } finally {
@@ -121,51 +132,51 @@ const SettingsPage = () => {
 
   return (
     <div className="space-y-6 p-6 max-w-3xl mx-auto">
-      <h1 className="text-2xl font-semibold">Einstellungen</h1>
+      <h1 className="text-2xl font-semibold">{t('settings.title')}</h1>
       
       <Accordion type="single" collapsible className="w-full">
         <AccordionItem value="profile" className="border rounded-lg p-4 shadow-sm">
           <AccordionTrigger className="flex items-center gap-3 text-lg font-medium">
             <User className="h-5 w-5" />
-            Profilinformationen
+            {t('settings.profile.title')}
           </AccordionTrigger>
           <AccordionContent className="pt-4 px-2">
             <div className="space-y-4">
               <div className="space-y-2">
-                <Label htmlFor="email">E-Mail-Adresse</Label>
+                <Label htmlFor="email">{t('settings.profile.emailLabel')}</Label>
                 <Input id="email" value={user?.email || ''} readOnly disabled />
-                <p className="text-sm text-muted-foreground">Ihre E-Mail-Adresse kann nicht geändert werden</p>
+                <p className="text-sm text-muted-foreground">{t('settings.profile.emailReadOnly')}</p>
               </div>
               
               <div className="space-y-2">
-                <Label htmlFor="company">Unternehmen</Label>
+                <Label htmlFor="company">{t('settings.profile.companyLabel')}</Label>
                 <Input 
                   id="company" 
                   value={company} 
                   onChange={(e) => setCompany(e.target.value)} 
-                  placeholder="Ihr Unternehmen"
+                  placeholder={t('settings.profile.companyPlaceholder')}
                   disabled={profileLoading}
                 />
               </div>
               
               <div className="space-y-2">
-                <Label htmlFor="position">Position</Label>
+                <Label htmlFor="position">{t('settings.profile.positionLabel')}</Label>
                 <Input 
                   id="position" 
                   value={position} 
                   onChange={(e) => setPosition(e.target.value)} 
-                  placeholder="Ihre Position"
+                  placeholder={t('settings.profile.positionPlaceholder')}
                   disabled={profileLoading}
                 />
               </div>
               
               <div className="space-y-2">
-                <Label htmlFor="phone">Telefonnummer</Label>
+                <Label htmlFor="phone">{t('settings.profile.phoneLabel')}</Label>
                 <Input 
                   id="phone" 
                   value={phone} 
                   onChange={(e) => setPhone(e.target.value)} 
-                  placeholder="Ihre Telefonnummer"
+                  placeholder={t('settings.profile.phonePlaceholder')}
                   disabled={profileLoading}
                 />
               </div>
@@ -176,7 +187,7 @@ const SettingsPage = () => {
                 className="w-full"
               >
                 {loadingCompany && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                Profilinformationen speichern
+                {t('settings.profile.saveButton')}
               </Button>
             </div>
           </AccordionContent>
@@ -185,12 +196,12 @@ const SettingsPage = () => {
         <AccordionItem value="password" className="border rounded-lg p-4 shadow-sm mt-4">
           <AccordionTrigger className="flex items-center gap-3 text-lg font-medium">
             <Key className="h-5 w-5" />
-            Passwort ändern
+            {t('settings.password.title')}
           </AccordionTrigger>
           <AccordionContent className="pt-4 px-2">
             <div className="space-y-4">
               <div className="space-y-2">
-                <Label htmlFor="current-password">Aktuelles Passwort</Label>
+                <Label htmlFor="current-password">{t('settings.password.currentPassword')}</Label>
                 <Input 
                   id="current-password" 
                   type="password" 
@@ -200,7 +211,7 @@ const SettingsPage = () => {
               </div>
               
               <div className="space-y-2">
-                <Label htmlFor="new-password">Neues Passwort</Label>
+                <Label htmlFor="new-password">{t('settings.password.newPassword')}</Label>
                 <Input 
                   id="new-password" 
                   type="password"
@@ -210,7 +221,7 @@ const SettingsPage = () => {
               </div>
               
               <div className="space-y-2">
-                <Label htmlFor="confirm-password">Passwort bestätigen</Label>
+                <Label htmlFor="confirm-password">{t('settings.password.confirmPassword')}</Label>
                 <Input 
                   id="confirm-password" 
                   type="password"
@@ -225,8 +236,34 @@ const SettingsPage = () => {
                 className="w-full"
               >
                 {isUpdating && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                Passwort ändern
+                {t('settings.password.changeButton')}
               </Button>
+            </div>
+          </AccordionContent>
+        </AccordionItem>
+        
+        <AccordionItem value="language" className="border rounded-lg p-4 shadow-sm mt-4">
+          <AccordionTrigger className="flex items-center gap-3 text-lg font-medium">
+            <Globe className="h-5 w-5" />
+            {t('settings.language.title')}
+          </AccordionTrigger>
+          <AccordionContent className="pt-4 px-2">
+            <div className="space-y-4">
+              <div className="space-y-2">
+                <Label htmlFor="language">{t('settings.language.selectLanguage')}</Label>
+                <Select 
+                  value={currentLanguage} 
+                  onValueChange={(value) => changeLanguage(value as Language)}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder={t('settings.language.selectLanguage')} />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="en">{t('settings.language.english')}</SelectItem>
+                    <SelectItem value="de">{t('settings.language.german')}</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
             </div>
           </AccordionContent>
         </AccordionItem>
@@ -234,12 +271,12 @@ const SettingsPage = () => {
         <AccordionItem value="appearance" className="border rounded-lg p-4 shadow-sm mt-4">
           <AccordionTrigger className="flex items-center gap-3 text-lg font-medium">
             <Moon className="h-5 w-5" />
-            Darstellungsoptionen
+            {t('settings.appearance.title')}
           </AccordionTrigger>
           <AccordionContent className="pt-4 px-2">
             <div className="flex items-center justify-between">
               <Label htmlFor="theme-toggle" className="flex-1">
-                Dunkler Modus
+                {t('settings.appearance.darkMode')}
               </Label>
               <Switch
                 id="theme-toggle"
@@ -253,7 +290,7 @@ const SettingsPage = () => {
         <AccordionItem value="account" className="border rounded-lg p-4 shadow-sm mt-4">
           <AccordionTrigger className="flex items-center gap-3 text-lg font-medium">
             <LogOut className="h-5 w-5" />
-            Konto
+            {t('settings.account.title')}
           </AccordionTrigger>
           <AccordionContent className="pt-4 px-2">
             <div className="space-y-4">
@@ -261,21 +298,21 @@ const SettingsPage = () => {
                 <div className="mb-4">
                   <Link to="/admin">
                     <Button variant="outline" className="w-full">
-                      Admin Dashboard öffnen
+                      {t('settings.account.adminDashboard')}
                     </Button>
                   </Link>
                 </div>
               )}
               <div className="space-y-2">
                 <p className="text-muted-foreground">
-                  Angemeldet als: {role}
+                  {t('settings.account.loggedInAs')} {role}
                 </p>
                 <Button 
                   variant="destructive" 
                   onClick={() => signOut()}
                   className="w-full"
                 >
-                  Abmelden
+                  {t('settings.account.signOut')}
                 </Button>
               </div>
             </div>

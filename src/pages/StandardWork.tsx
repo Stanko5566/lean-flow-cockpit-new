@@ -1,4 +1,4 @@
-import React from "react";
+import { useState } from "react";
 import { FileText, Trash2 } from "lucide-react";
 import {
   Card,
@@ -7,17 +7,38 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 import { useStandardProcedures } from "@/hooks/useStandardProcedures";
 import { formatDate } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { CreateStandardDialog } from "@/components/standard-work/CreateStandardDialog";
+import { useTranslation } from "react-i18next";
 
 const StandardWork = () => {
   const { procedures, isLoading, deleteProcedure } = useStandardProcedures();
+  const { t } = useTranslation();
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [procedureToDelete, setprocedureToDelete] = useState<{ id: string; title: string } | null>(null);
 
-  const handleDelete = (id: string, title: string) => {
-    if (window.confirm(`Sind Sie sicher, dass Sie "${title}" löschen möchten?`)) {
-      deleteProcedure(id);
+  const handleDeleteClick = (id: string, title: string) => {
+    setprocedureToDelete({ id, title });
+    setDeleteDialogOpen(true);
+  };
+
+  const confirmDelete = () => {
+    if (procedureToDelete) {
+      deleteProcedure(procedureToDelete.id);
+      setDeleteDialogOpen(false);
+      setprocedureToDelete(null);
     }
   };
 
@@ -29,7 +50,7 @@ const StandardWork = () => {
       </div>
 
       {isLoading ? (
-        <div>Laden...</div>
+        <div>{t('common.loading')}</div>
       ) : (
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
           {procedures.length > 0 ? (
@@ -48,7 +69,7 @@ const StandardWork = () => {
                       <Button
                         variant="ghost"
                         size="icon"
-                        onClick={() => handleDelete(procedure.id, procedure.title)}
+                        onClick={() => handleDeleteClick(procedure.id, procedure.title)}
                         className="h-8 w-8"
                       >
                         <Trash2 className="h-4 w-4" />
@@ -75,6 +96,23 @@ const StandardWork = () => {
           )}
         </div>
       )}
+
+      <AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>{t('common.confirm')}</AlertDialogTitle>
+            <AlertDialogDescription>
+              {t('common.deleteConfirmation', { item: procedureToDelete?.title })}
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>{t('common.cancel')}</AlertDialogCancel>
+            <AlertDialogAction onClick={confirmDelete} className="bg-destructive text-destructive-foreground">
+              {t('common.delete')}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 };

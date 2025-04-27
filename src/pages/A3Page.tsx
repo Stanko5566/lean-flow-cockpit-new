@@ -11,12 +11,14 @@ import { useA3Reports } from "@/hooks/useA3Reports";
 import { formatDate } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { CreateA3Dialog } from "@/components/a3/CreateA3Dialog";
+import { useTranslation } from "react-i18next";
 
 const A3Page = () => {
   const { reports, isLoading, deleteReport } = useA3Reports();
+  const { t } = useTranslation();
 
   const handleDelete = (id: string, title: string) => {
-    if (window.confirm(`Sind Sie sicher, dass Sie "${title}" löschen möchten?`)) {
+    if (window.confirm(t('common.confirmDelete', { item: title }))) {
       deleteReport(id);
     }
   };
@@ -24,12 +26,12 @@ const A3Page = () => {
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-semibold tracking-tight">A3 Reports</h1>
+        <h1 className="text-2xl font-semibold tracking-tight">{t('a3.title')}</h1>
         <CreateA3Dialog />
       </div>
 
       {isLoading ? (
-        <div>Laden...</div>
+        <div>{t('common.loading')}</div>
       ) : (
         <div className="grid gap-4 md:grid-cols-2">
           {reports.length > 0 ? (
@@ -39,7 +41,7 @@ const A3Page = () => {
                   <div className="flex items-center justify-between">
                     <div>
                       <CardTitle>{report.title}</CardTitle>
-                      <CardDescription>Erstellt am {formatDate(report.created_at)}</CardDescription>
+                      <CardDescription>{t('a3.createdOn')} {formatDate(report.created_at)}</CardDescription>
                     </div>
                     <div className="flex space-x-2">
                       <FileChartColumn className="h-4 w-4 text-muted-foreground" />
@@ -57,12 +59,12 @@ const A3Page = () => {
                 <CardContent>
                   <div className="space-y-2">
                     <div className="text-sm">
-                      <span className="font-medium">Status: {report.status}</span>
+                      <span className="font-medium">{t('a3.status')}: {report.status}</span>
                       <div className="mt-2 space-y-1 text-muted-foreground">
-                        <p>Ziel: {report.goal}</p>
-                        <p>Team: {report.team.join(', ')}</p>
-                        {report.deadline && <p>Deadline: {formatDate(report.deadline)}</p>}
-                        {report.result && <p>Ergebnis: {report.result}</p>}
+                        <p>{t('a3.goal')}: {report.goal}</p>
+                        <p>{t('a3.team')}: {report.team.join(', ')}</p>
+                        {report.deadline && <p>{t('a3.deadline')}: {formatDate(report.deadline)}</p>}
+                        {report.result && <p>{t('a3.result')}: {report.result}</p>}
                       </div>
                     </div>
                   </div>
@@ -71,7 +73,7 @@ const A3Page = () => {
             ))
           ) : (
             <div className="col-span-2 text-center py-6 text-muted-foreground">
-              Keine A3 Reports gefunden. Erstellen Sie einen neuen Report mit dem Button oben rechts.
+              {t('a3.noReports')}
             </div>
           )}
         </div>

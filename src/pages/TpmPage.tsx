@@ -11,12 +11,14 @@ import { useTpmEquipment } from "@/hooks/useTpmEquipment";
 import { formatDate } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { CreateTpmDialog } from "@/components/tpm/CreateTpmDialog";
+import { useTranslation } from "react-i18next";
 
 const TpmPage = () => {
   const { equipment, isLoading, deleteEquipment } = useTpmEquipment();
+  const { t } = useTranslation();
 
   const handleDelete = (id: string, name: string) => {
-    if (window.confirm(`Sind Sie sicher, dass Sie "${name}" löschen möchten?`)) {
+    if (window.confirm(t('common.confirmDelete', { item: name }))) {
       deleteEquipment(id);
     }
   };
@@ -40,19 +42,19 @@ const TpmPage = () => {
   // Determine color and text for maintenance status
   const getMaintenanceStatus = (lastMaintenance: string) => {
     const days = getDaysSince(lastMaintenance);
-    if (days > 30) return { text: `vor ${days} Tagen`, color: "text-red-600" };
-    return { text: `vor ${days} Tagen`, color: "text-muted-foreground" };
+    if (days > 30) return { text: t('tpm.daysAgo', { days }), color: "text-red-600" };
+    return { text: t('tpm.daysAgo', { days }), color: "text-muted-foreground" };
   };
 
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-semibold tracking-tight">TPM Board</h1>
+        <h1 className="text-2xl font-semibold tracking-tight">{t('tpm.title')}</h1>
         <CreateTpmDialog />
       </div>
 
       {isLoading ? (
-        <div>Laden...</div>
+        <div>{t('common.loading')}</div>
       ) : (
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
           {equipment.length > 0 ? (
@@ -63,7 +65,7 @@ const TpmPage = () => {
                     <div>
                       <CardTitle>{item.name}</CardTitle>
                       <CardDescription>
-                        Nächste Wartung: {formatDate(item.next_maintenance)}
+                        {t('tpm.nextMaintenance')}: {formatDate(item.next_maintenance)}
                       </CardDescription>
                     </div>
                     <div className="flex space-x-2">
@@ -82,17 +84,17 @@ const TpmPage = () => {
                 <CardContent>
                   <div className="space-y-2">
                     <div className="flex justify-between items-center">
-                      <span className="text-sm font-medium">OEE Score</span>
+                      <span className="text-sm font-medium">{t('tpm.oeeScore')}</span>
                       <span className={`text-sm ${getOeeColor(item.oee_score)}`}>
                         {item.oee_score}%
                       </span>
                     </div>
                     <div className="flex justify-between items-center">
-                      <span className="text-sm font-medium">Verfügbarkeit</span>
+                      <span className="text-sm font-medium">{t('tpm.availability')}</span>
                       <span className="text-sm text-blue-600">{item.availability}%</span>
                     </div>
                     <div className="flex justify-between items-center">
-                      <span className="text-sm font-medium">Letzte Wartung</span>
+                      <span className="text-sm font-medium">{t('tpm.lastMaintenance')}</span>
                       <span className={`text-sm ${getMaintenanceStatus(item.last_maintenance).color}`}>
                         {getMaintenanceStatus(item.last_maintenance).text}
                       </span>
@@ -103,7 +105,7 @@ const TpmPage = () => {
             ))
           ) : (
             <div className="col-span-3 text-center py-6 text-muted-foreground">
-              Keine Geräte gefunden. Erstellen Sie ein neues Gerät mit dem Button oben rechts.
+              {t('tpm.noEquipment')}
             </div>
           )}
         </div>

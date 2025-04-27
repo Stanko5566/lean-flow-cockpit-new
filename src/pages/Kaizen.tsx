@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Plus, Trash2 } from "lucide-react";
 import {
@@ -8,6 +8,16 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 import { useKaizenItems, CreateKaizenItemDto } from "@/hooks/useKaizenItems";
 import {
   Dialog,
@@ -38,7 +48,7 @@ import {
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
-import { cn } from "@/lib/utils";
+import { useTranslation } from "react-i18next";
 
 const formSchema = z.object({
   title: z.string().min(2, "Der Titel muss mindestens 2 Zeichen haben"),
@@ -54,6 +64,9 @@ type FormData = z.infer<typeof formSchema>;
 const KaizenPage = () => {
   const { items, isLoading, createItem, updateItem, deleteItem } = useKaizenItems();
   const [open, setOpen] = useState(false);
+  const { t } = useTranslation();
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [itemToDelete, setItemToDelete] = useState<string | null>(null);
 
   const form = useForm<FormData>({
     resolver: zodResolver(formSchema),
@@ -87,6 +100,19 @@ const KaizenPage = () => {
 
   const handleStatusChange = (itemId: string, newStatus: 'open' | 'in_progress' | 'completed') => {
     updateItem({ id: itemId, updates: { status: newStatus } });
+  };
+
+  const handleDeleteClick = (id: string) => {
+    setItemToDelete(id);
+    setDeleteDialogOpen(true);
+  };
+
+  const confirmDelete = () => {
+    if (itemToDelete) {
+      deleteItem(itemToDelete);
+      setDeleteDialogOpen(false);
+      setItemToDelete(null);
+    }
   };
 
   return (
@@ -216,7 +242,7 @@ const KaizenPage = () => {
 
       {isLoading ? (
         <div className="flex items-center justify-center p-8">
-          <div className="text-center">Lade Kaizen-Vorschläge...</div>
+          <div className="text-center">{t('common.loading')}</div>
         </div>
       ) : items.length === 0 ? (
         <div className="flex flex-col items-center justify-center p-8 text-center">
@@ -253,7 +279,7 @@ const KaizenPage = () => {
                     <Button
                       variant="ghost"
                       size="icon"
-                      onClick={() => deleteItem(item.id)}
+                      onClick={() => handleDeleteClick(item.id)}
                       className="h-8 w-8"
                     >
                       <Trash2 className="h-4 w-4" />
@@ -303,7 +329,7 @@ const KaizenPage = () => {
                     <Button
                       variant="ghost"
                       size="icon"
-                      onClick={() => deleteItem(item.id)}
+                      onClick={() => handleDeleteClick(item.id)}
                       className="h-8 w-8"
                     >
                       <Trash2 className="h-4 w-4" />
@@ -353,7 +379,7 @@ const KaizenPage = () => {
                     <Button
                       variant="ghost"
                       size="icon"
-                      onClick={() => deleteItem(item.id)}
+                      onClick={() => handleDeleteClick(item.id)}
                       className="h-8 w-8"
                     >
                       <Trash2 className="h-4 w-4" />
@@ -378,6 +404,23 @@ const KaizenPage = () => {
           </Card>
         </div>
       )}
+
+      <AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>{t('common.confirm')}</AlertDialogTitle>
+            <AlertDialogDescription>
+              {t('common.deleteConfirmation')}
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>{t('common.cancel')}</AlertDialogCancel>
+            <AlertDialogAction onClick={confirmDelete} className="bg-destructive text-destructive-foreground">
+              {t('common.delete')}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 };

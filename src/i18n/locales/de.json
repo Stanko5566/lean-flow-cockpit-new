@@ -11,7 +11,17 @@
     "previous": "Zurück",
     "confirm": "Bestätigen",
     "yes": "Ja",
-    "no": "Nein"
+    "no": "Nein",
+    "deleteConfirmation": "Möchten Sie diesen Eintrag wirklich löschen? Diese Aktion kann nicht rückgängig gemacht werden.",
+    "error": "Fehler",
+    "success": "Erfolg",
+    "create": "Erstellen",
+    "saving": "Speichern...",
+    "title": "Titel",
+    "description": "Beschreibung",
+    "name": "Name",
+    "status": "Status",
+    "confirmDelete": "Möchten Sie \"{{item}}\" wirklich löschen?"
   },
   "sidebar": {
     "dashboard": "Dashboard",
@@ -96,5 +106,123 @@
   "profile": {
     "updateError": "Profilaktualisierung fehlgeschlagen",
     "updateSuccess": "Profil erfolgreich aktualisiert"
+  },
+  "dashboard": {
+    "title": "Dashboard",
+    "newInitiative": "Neue Initiative",
+    "createInitiative": "Neue Lean-Initiative erstellen"
+  },
+  "tpm": {
+    "title": "TPM Board",
+    "nextMaintenance": "Nächste Wartung",
+    "oeeScore": "OEE Score",
+    "availability": "Verfügbarkeit",
+    "lastMaintenance": "Letzte Wartung",
+    "daysAgo": "vor {{days}} Tagen",
+    "noEquipment": "Keine Geräte gefunden. Erstellen Sie ein neues Gerät mit dem Button oben rechts."
+  },
+  "a3": {
+    "title": "A3 Reports",
+    "createdOn": "Erstellt am",
+    "status": "Status",
+    "goal": "Ziel",
+    "team": "Team",
+    "deadline": "Deadline",
+    "result": "Ergebnis",
+    "noReports": "Keine A3 Reports gefunden. Erstellen Sie einen neuen Report mit dem Button oben rechts."
+  },
+  "andon": {
+    "title": "Andon Board",
+    "liveView": "Live Ansicht",
+    "newStation": "Neue Station",
+    "createStation": "Neue Andon-Station erstellen",
+    "createStationDescription": "Erstellen Sie eine neue Station für das Andon-Board",
+    "stationNamePlaceholder": "z.B. Montagelinie 1",
+    "selectStatus": "Status auswählen",
+    "efficiency": "Effizienz (%)",
+    "status": {
+      "active": "Aktiv",
+      "maintenance": "Wartung",
+      "error": "Störung",
+      "unknown": "Unbekannt"
+    }
+  },
+  "notFound": {
+    "pageNotFound": "Diese Seite wurde nicht gefunden",
+    "backToDashboard": "Zurück zum Dashboard"
+  },
+  "login": {
+    "signInToContinue": "Anmelden, um fortzufahren",
+    "createAccount": "Neues Konto erstellen",
+    "email": "E-Mail",
+    "password": "Passwort",
+    "emailPlaceholder": "email@beispiel.de",
+    "signIn": "Anmelden",
+    "register": "Registrieren",
+    "createNewAccount": "Neues Konto erstellen",
+    "alreadyHaveAccount": "Bereits ein Konto? Anmelden"
+  },
+  "pdca": {
+    "title": "PDCA-Zyklus",
+    "newCycle": "Neuer PDCA-Zyklus",
+    "createCycle": "Neuen PDCA-Zyklus erstellen",
+    "titlePlaceholder": "PDCA-Zyklus Titel",
+    "descriptionPlaceholder": "Beschreiben Sie den Zweck dieses PDCA-Zyklus",
+    "noCycles": "Keine PDCA-Zyklen gefunden",
+    "createFirstCycle": "Ersten PDCA-Zyklus erstellen"
+  },
+  "5s": {
+    "title": "5S Checklisten",
+    "newChecklist": "Neue Checkliste",
+    "createChecklist": "Neue 5S Checkliste erstellen",
+    "createDescription": "Erstellen Sie eine neue 5S Checkliste mit Bewertungen für jeden S-Bereich.",
+    "titlePlaceholder": "Titel der Checkliste",
+    "descriptionPlaceholder": "Kurze Beschreibung",
+    "score": "Score",
+    "noChecklists": "Keine 5S Checklisten gefunden",
+    "createFirstChecklist": "Erste 5S Checkliste erstellen",
+    "seiri": "Seiri (Sortieren)",
+    "seiton": "Seiton (Systematisieren)",
+    "seiso": "Seiso (Säubern)",
+    "seiketsu": "Seiketsu (Standardisieren)",
+    "shitsuke": "Shitsuke (Selbstdisziplin)",
+    "totalScore": "Gesamtpunktzahl"
+  },
+  "admin": {
+    "title": "Admin Dashboard",
+    "userManagement": "Benutzerverwaltung",
+    "userManagementDescription": "Benutzerkonten und Berechtigungen verwalten",
+    "addUser": "Benutzer hinzufügen",
+    "addNewUser": "Neuen Benutzer hinzufügen",
+    "fillUserDetails": "Füllen Sie die Benutzerdetails aus, um ein neues Konto zu erstellen",
+    "role": "Rolle",
+    "selectRole": "Rolle auswählen",
+    "userRole": "Standardbenutzer",
+    "adminRole": "Administrator",
+    "makeAdmin": "Zum Admin machen",
+    "makeUser": "Zum Benutzer machen",
+    "errorLoadingUsers": "Fehler beim Laden der Benutzer",
+    "roleUpdatedSuccess": "Benutzerrolle erfolgreich aktualisiert",
+    "errorUpdatingRole": "Fehler beim Aktualisieren der Benutzerrolle",
+    "emailPasswordRequired": "E-Mail und Passwort sind erforderlich",
+    "userCreationFailed": "Benutzererstellung fehlgeschlagen",
+    "userCreatedSuccess": "Benutzer {{email}} wurde erfolgreich erstellt",
+    "errorAddingUser": "Fehler beim Hinzufügen des Benutzers",
+    "noUsers": "Keine Benutzer gefunden"
+  },
+  "kanban": {
+    "title": "Kanban Board",
+    "newTask": "Neue Aufgabe",
+    "createTask": "Neue Aufgabe erstellen",
+    "taskTitlePlaceholder": "Aufgabentitel",
+    "taskDescriptionPlaceholder": "Beschreibung der Aufgabe",
+    "assignedTo": "Zugewiesen an",
+    "assigneePlaceholder": "Name des Verantwortlichen",
+    "tasks": "Aufgaben",
+    "status": {
+      "todo": "Zu erledigen",
+      "inProgress": "In Bearbeitung",
+      "done": "Abgeschlossen"
+    }
   }
 } 

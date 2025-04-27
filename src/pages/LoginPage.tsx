@@ -1,4 +1,3 @@
-
 import React from "react";
 import { useNavigate, Navigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
@@ -9,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { LineChart } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 const formSchema = z.object({
   email: z.string().email("Gültige E-Mail-Adresse erforderlich"),
@@ -21,6 +21,7 @@ const LoginPage = () => {
   const { signIn, signUp, user, loading } = useAuth();
   const navigate = useNavigate();
   const [isLogin, setIsLogin] = React.useState(true);
+  const { t } = useTranslation();
 
   // If user is already logged in, redirect to dashboard
   if (user && !loading) {
@@ -55,7 +56,7 @@ const LoginPage = () => {
           <LineChart className="h-10 w-10 text-lean-blue" />
           <h1 className="text-2xl font-bold">LeanFlow</h1>
           <p className="text-sm text-muted-foreground">
-            {isLogin ? "Anmelden, um fortzufahren" : "Neues Konto erstellen"}
+            {isLogin ? t('login.signInToContinue') : t('login.createAccount')}
           </p>
         </div>
 
@@ -66,9 +67,9 @@ const LoginPage = () => {
               name="email"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>E-Mail</FormLabel>
+                  <FormLabel>{t('login.email')}</FormLabel>
                   <FormControl>
-                    <Input placeholder="email@beispiel.de" {...field} />
+                    <Input placeholder={t('login.emailPlaceholder')} {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -79,7 +80,7 @@ const LoginPage = () => {
               name="password"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Passwort</FormLabel>
+                  <FormLabel>{t('login.password')}</FormLabel>
                   <FormControl>
                     <Input type="password" {...field} />
                   </FormControl>
@@ -89,7 +90,7 @@ const LoginPage = () => {
             />
 
             <Button type="submit" className="w-full">
-              {isLogin ? "Anmelden" : "Registrieren"}
+              {isLogin ? t('login.signIn') : t('login.register')}
             </Button>
           </form>
         </Form>
@@ -100,7 +101,7 @@ const LoginPage = () => {
             onClick={() => setIsLogin(!isLogin)}
             className="text-primary"
           >
-            {isLogin ? "Neues Konto erstellen" : "Bereits ein Konto? Anmelden"}
+            {isLogin ? t('login.createNewAccount') : t('login.alreadyHaveAccount')}
           </Button>
         </div>
       </div>

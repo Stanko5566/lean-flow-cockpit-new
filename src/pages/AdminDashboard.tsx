@@ -22,6 +22,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { PlusCircle, UserPlus, ShieldCheck, User } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 interface UserData {
   id: string;
@@ -38,6 +39,7 @@ const AdminDashboard = () => {
   const [role, setRole] = useState<'admin' | 'user'>('user');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { toast } = useToast();
+  const { t } = useTranslation();
 
   const fetchUsers = async () => {
     try {
@@ -80,8 +82,8 @@ const AdminDashboard = () => {
     } catch (error) {
       console.error('Error fetching users:', error);
       toast({
-        title: "Error",
-        description: "Failed to load users",
+        title: t('common.error'),
+        description: t('admin.errorLoadingUsers'),
         variant: "destructive"
       });
     } finally {
@@ -99,16 +101,16 @@ const AdminDashboard = () => {
       if (error) throw error;
 
       toast({
-        title: "Success",
-        description: "User role updated successfully"
+        title: t('common.success'),
+        description: t('admin.roleUpdatedSuccess')
       });
 
       fetchUsers();
     } catch (error) {
       console.error('Error updating user role:', error);
       toast({
-        title: "Error",
-        description: "Failed to update user role",
+        title: t('common.error'),
+        description: t('admin.errorUpdatingRole'),
         variant: "destructive"
       });
     }
@@ -117,8 +119,8 @@ const AdminDashboard = () => {
   const addNewUser = async () => {
     if (!email || !password) {
       toast({
-        title: "Error",
-        description: "Email and password are required",
+        title: t('common.error'),
+        description: t('admin.emailPasswordRequired'),
         variant: "destructive"
       });
       return;
@@ -139,7 +141,7 @@ const AdminDashboard = () => {
       if (authError) throw authError;
 
       if (!userData.user) {
-        throw new Error("User creation failed");
+        throw new Error(t('admin.userCreationFailed'));
       }
 
       // Check if the user already has a role assigned
@@ -185,8 +187,8 @@ const AdminDashboard = () => {
       }
 
       toast({
-        title: "Success",
-        description: `User ${email} has been created successfully`,
+        title: t('common.success'),
+        description: t('admin.userCreatedSuccess', { email }),
       });
 
       // Reset form and close dialog
@@ -198,10 +200,10 @@ const AdminDashboard = () => {
       // Refresh the user list
       fetchUsers();
     } catch (error: any) {
-      console.error('Error creating user:', error);
+      console.error('Error adding user:', error);
       toast({
-        title: "Error",
-        description: error.message || "Failed to create user",
+        title: t('common.error'),
+        description: error.message || t('admin.errorAddingUser'),
         variant: "destructive"
       });
     } finally {
@@ -214,132 +216,129 @@ const AdminDashboard = () => {
   }, []);
 
   return (
-    <div className="space-y-6 p-6">
+    <div className="space-y-6">
       <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-semibold">Admin Dashboard</h1>
-        
-        <Dialog open={addUserOpen} onOpenChange={setAddUserOpen}>
-          <DialogTrigger asChild>
-            <Button>
-              <UserPlus className="mr-2 h-4 w-4" /> Add User
-            </Button>
-          </DialogTrigger>
-          <DialogContent>
-            <DialogHeader>
-              <DialogTitle>Invite New User</DialogTitle>
-              <DialogDescription>
-                Create a new user account and assign their role.
-              </DialogDescription>
-            </DialogHeader>
-            <div className="space-y-4 py-4">
-              <div className="space-y-2">
-                <Label htmlFor="email">Email</Label>
-                <Input
-                  id="email"
-                  placeholder="user@example.com"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="password">Password</Label>
-                <Input
-                  id="password"
-                  type="password"
-                  placeholder="••••••••"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="role">Role</Label>
-                <Select value={role} onValueChange={(value: 'admin' | 'user') => setRole(value)}>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select a role" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="admin">Administrator</SelectItem>
-                    <SelectItem value="user">Standard User</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-            </div>
-            <DialogFooter>
-              <Button variant="outline" onClick={() => setAddUserOpen(false)}>
-                Cancel
-              </Button>
-              <Button onClick={addNewUser} disabled={isSubmitting}>
-                {isSubmitting ? "Creating..." : "Create User"}
-              </Button>
-            </DialogFooter>
-          </DialogContent>
-        </Dialog>
+        <h1 className="text-2xl font-semibold tracking-tight">{t('admin.title')}</h1>
       </div>
-      
+
       <Card>
         <CardHeader>
-          <CardTitle>User Management</CardTitle>
-          <CardDescription>
-            View and manage user accounts and their permissions.
-          </CardDescription>
+          <div className="flex items-center justify-between">
+            <div>
+              <CardTitle>{t('admin.userManagement')}</CardTitle>
+              <CardDescription>{t('admin.userManagementDescription')}</CardDescription>
+            </div>
+            <Dialog open={addUserOpen} onOpenChange={setAddUserOpen}>
+              <DialogTrigger asChild>
+                <Button variant="outline" className="flex items-center gap-1">
+                  <PlusCircle className="h-4 w-4" /> {t('admin.addUser')}
+                </Button>
+              </DialogTrigger>
+              <DialogContent className="sm:max-w-[425px]">
+                <DialogHeader>
+                  <DialogTitle>{t('admin.addNewUser')}</DialogTitle>
+                  <DialogDescription>
+                    {t('admin.fillUserDetails')}
+                  </DialogDescription>
+                </DialogHeader>
+                <div className="grid gap-4 py-4">
+                  <div className="grid gap-2">
+                    <Label htmlFor="email">{t('login.email')}</Label>
+                    <Input
+                      id="email"
+                      type="email"
+                      placeholder={t('login.emailPlaceholder')}
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                    />
+                  </div>
+                  <div className="grid gap-2">
+                    <Label htmlFor="password">{t('login.password')}</Label>
+                    <Input
+                      id="password"
+                      type="password"
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                    />
+                  </div>
+                  <div className="grid gap-2">
+                    <Label htmlFor="role">{t('admin.role')}</Label>
+                    <Select value={role} onValueChange={(value: 'admin' | 'user') => setRole(value)}>
+                      <SelectTrigger id="role">
+                        <SelectValue placeholder={t('admin.selectRole')} />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="user">{t('admin.userRole')}</SelectItem>
+                        <SelectItem value="admin">{t('admin.adminRole')}</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                </div>
+                <DialogFooter>
+                  <Button type="submit" onClick={addNewUser} disabled={isSubmitting}>
+                    {isSubmitting ? t('common.saving') : t('common.save')}
+                  </Button>
+                </DialogFooter>
+              </DialogContent>
+            </Dialog>
+          </div>
         </CardHeader>
         <CardContent>
           {loading ? (
-            <div className="flex justify-center p-8">
-              <div className="text-center">Loading users...</div>
-            </div>
-          ) : users.length === 0 ? (
-            <div className="flex flex-col items-center justify-center p-8 text-center">
-              <p className="text-muted-foreground mb-4">No users found</p>
-              <Button onClick={() => setAddUserOpen(true)} variant="outline">
-                <UserPlus className="mr-2 h-4 w-4" /> Add your first user
-              </Button>
-            </div>
+            <div className="text-center py-4">{t('common.loading')}</div>
           ) : (
             <div className="space-y-4">
-              {users.map((user) => (
-                <div key={user.id} className="flex items-center justify-between p-4 border rounded-lg">
-                  <div className="flex items-center gap-3">
-                    <div className="bg-muted rounded-full p-2">
+              {users.length === 0 ? (
+                <div className="text-center py-4 text-muted-foreground">
+                  {t('admin.noUsers')}
+                </div>
+              ) : (
+                users.map((user) => (
+                  <div
+                    key={user.id}
+                    className="flex items-center justify-between p-3 rounded-md border"
+                  >
+                    <div className="flex items-center gap-3">
                       {user.role === 'admin' ? (
-                        <ShieldCheck className="h-5 w-5 text-primary" />
+                        <ShieldCheck className="h-5 w-5 text-blue-600" />
                       ) : (
-                        <User className="h-5 w-5 text-muted-foreground" />
+                        <User className="h-5 w-5 text-gray-400" />
+                      )}
+                      <div>
+                        <div className="font-medium">{user.email}</div>
+                        <div className="text-sm text-muted-foreground">
+                          {user.role === 'admin' ? t('admin.adminRole') : t('admin.userRole')}
+                        </div>
+                      </div>
+                    </div>
+                    <div className="flex gap-2">
+                      {user.role === 'admin' ? (
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          onClick={() => updateUserRole(user.id, 'user')}
+                        >
+                          {t('admin.makeUser')}
+                        </Button>
+                      ) : (
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          onClick={() => updateUserRole(user.id, 'admin')}
+                        >
+                          {t('admin.makeAdmin')}
+                        </Button>
                       )}
                     </div>
-                    <div>
-                      <p className="font-medium">{user.email}</p>
-                      <p className="text-sm text-muted-foreground capitalize">
-                        {user.role === 'admin' ? 'Administrator' : 'Standard User'}
-                      </p>
-                    </div>
                   </div>
-                  <div className="space-x-2">
-                    <Button
-                      variant={user.role === 'admin' ? 'outline' : 'default'}
-                      onClick={() => updateUserRole(user.id, 'admin')}
-                      disabled={user.role === 'admin'}
-                      size="sm"
-                    >
-                      <ShieldCheck className="mr-2 h-4 w-4" />
-                      Make Admin
-                    </Button>
-                    <Button
-                      variant={user.role === 'user' ? 'outline' : 'default'}
-                      onClick={() => updateUserRole(user.id, 'user')}
-                      disabled={user.role === 'user'}
-                      size="sm"
-                    >
-                      <User className="mr-2 h-4 w-4" />
-                      Make User
-                    </Button>
-                  </div>
-                </div>
-              ))}
+                ))
+              )}
             </div>
           )}
         </CardContent>
       </Card>
+      
+      {/* Additional admin features can be added here */}
     </div>
   );
 };

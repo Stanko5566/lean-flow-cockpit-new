@@ -1,13 +1,14 @@
-
 import React from "react";
 import { useLocation } from "react-router-dom";
 import { useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft } from "lucide-react";
 import { Link } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
 const NotFound = () => {
   const location = useLocation();
+  const { t } = useTranslation();
 
   useEffect(() => {
     console.error(
@@ -21,12 +22,12 @@ const NotFound = () => {
       <div className="text-center">
         <h1 className="text-6xl font-bold mb-4 text-lean-blue">404</h1>
         <p className="text-xl text-gray-600 mb-6">
-          Diese Seite wurde nicht gefunden
+          {t('notFound.pageNotFound')}
         </p>
         <Button asChild size="lg">
           <Link to="/" className="flex items-center gap-2">
             <ArrowLeft className="h-4 w-4" />
-            Zurück zum Dashboard
+            {t('notFound.backToDashboard')}
           </Link>
         </Button>
       </div>

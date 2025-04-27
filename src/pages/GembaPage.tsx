@@ -7,18 +7,37 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 import { useGembaWalks } from "@/hooks/useGembaWalks";
 import { Button } from "@/components/ui/button";
 import { CreateGembaDialog } from "@/components/gemba/CreateGembaDialog";
-import { useToast } from "@/hooks/use-toast";
+import { useTranslation } from "react-i18next";
 
 const GembaPage = () => {
   const { walks, isLoading, deleteWalk } = useGembaWalks();
-  const { toast } = useToast();
+  const { t } = useTranslation();
+  const [deleteDialogOpen, setDeleteDialogOpen] = React.useState(false);
+  const [walkToDelete, setWalkToDelete] = React.useState<{ id: string; title: string } | null>(null);
 
-  const handleDelete = (id: string, title: string) => {
-    if (window.confirm(`Sind Sie sicher, dass Sie "${title}" löschen möchten?`)) {
-      deleteWalk(id);
+  const handleDeleteClick = (id: string, title: string) => {
+    setWalkToDelete({ id, title });
+    setDeleteDialogOpen(true);
+  };
+
+  const confirmDelete = () => {
+    if (walkToDelete) {
+      deleteWalk(walkToDelete.id);
+      setDeleteDialogOpen(false);
+      setWalkToDelete(null);
     }
   };
 
@@ -30,7 +49,7 @@ const GembaPage = () => {
       </div>
 
       {isLoading ? (
-        <div>Laden...</div>
+        <div>{t('common.loading')}</div>
       ) : (
         <div className="grid gap-4 md:grid-cols-2">
           {walks.length > 0 ? (
@@ -47,7 +66,7 @@ const GembaPage = () => {
                       <Button
                         variant="ghost"
                         size="icon"
-                        onClick={() => handleDelete(walk.id, walk.title)}
+                        onClick={() => handleDeleteClick(walk.id, walk.title)}
                         className="h-8 w-8"
                       >
                         <Trash2 className="h-4 w-4" />
@@ -80,6 +99,23 @@ const GembaPage = () => {
           )}
         </div>
       )}
+
+      <AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>{t('common.confirm')}</AlertDialogTitle>
+            <AlertDialogDescription>
+              {t('common.deleteConfirmation', { item: walkToDelete?.title })}
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>{t('common.cancel')}</AlertDialogCancel>
+            <AlertDialogAction onClick={confirmDelete} className="bg-destructive text-destructive-foreground">
+              {t('common.delete')}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 };

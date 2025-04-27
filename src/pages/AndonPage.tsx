@@ -36,6 +36,7 @@ import {
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
+import { useTranslation } from "react-i18next";
 
 const formSchema = z.object({
   name: z.string().min(2, "Der Name muss mindestens 2 Zeichen haben"),
@@ -50,6 +51,7 @@ const AndonPage = () => {
   const { stations, isLoading, createStation, updateStation, deleteStation } = useAndonStations();
   const [open, setOpen] = useState(false);
   const [liveView, setLiveView] = useState(false);
+  const { t } = useTranslation();
 
   const form = useForm<FormData>({
     resolver: zodResolver(formSchema),
@@ -86,10 +88,10 @@ const AndonPage = () => {
 
   const getStatusText = (status: StationStatus) => {
     switch (status) {
-      case 'active': return { text: 'Aktiv', color: 'text-green-500' };
-      case 'maintenance': return { text: 'Wartung', color: 'text-yellow-500' };
-      case 'error': return { text: 'Störung', color: 'text-red-500' };
-      default: return { text: 'Unbekannt', color: 'text-gray-500' };
+      case 'active': return { text: t('andon.status.active'), color: 'text-green-500' };
+      case 'maintenance': return { text: t('andon.status.maintenance'), color: 'text-yellow-500' };
+      case 'error': return { text: t('andon.status.error'), color: 'text-red-500' };
+      default: return { text: t('andon.status.unknown'), color: 'text-gray-500' };
     }
   };
 
@@ -100,26 +102,26 @@ const AndonPage = () => {
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-semibold tracking-tight">Andon Board</h1>
+        <h1 className="text-2xl font-semibold tracking-tight">{t('andon.title')}</h1>
         <div className="flex gap-2">
           <Button 
             variant={liveView ? "default" : "outline"} 
             className="flex items-center gap-1"
             onClick={() => setLiveView(!liveView)}
           >
-            <Clock className="h-4 w-4" /> Live Ansicht
+            <Clock className="h-4 w-4" /> {t('andon.liveView')}
           </Button>
           <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild>
               <Button className="flex items-center gap-1">
-                <Plus className="h-4 w-4" /> Neue Station
+                <Plus className="h-4 w-4" /> {t('andon.newStation')}
               </Button>
             </DialogTrigger>
             <DialogContent>
               <DialogHeader>
-                <DialogTitle>Neue Andon-Station erstellen</DialogTitle>
+                <DialogTitle>{t('andon.createStation')}</DialogTitle>
                 <DialogDescription>
-                  Erstellen Sie eine neue Station für das Andon-Board
+                  {t('andon.createStationDescription')}
                 </DialogDescription>
               </DialogHeader>
               <Form {...form}>
@@ -129,9 +131,9 @@ const AndonPage = () => {
                     name="name"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Name</FormLabel>
+                        <FormLabel>{t('common.name')}</FormLabel>
                         <FormControl>
-                          <Input placeholder="z.B. Montagelinie 1" {...field} />
+                          <Input placeholder={t('andon.stationNamePlaceholder')} {...field} />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -143,20 +145,20 @@ const AndonPage = () => {
                     name="status"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Status</FormLabel>
+                        <FormLabel>{t('common.status')}</FormLabel>
                         <Select
                           onValueChange={field.onChange}
                           defaultValue={field.value}
                         >
                           <FormControl>
                             <SelectTrigger>
-                              <SelectValue placeholder="Status auswählen" />
+                              <SelectValue placeholder={t('andon.selectStatus')} />
                             </SelectTrigger>
                           </FormControl>
                           <SelectContent>
-                            <SelectItem value="active">Aktiv</SelectItem>
-                            <SelectItem value="maintenance">Wartung</SelectItem>
-                            <SelectItem value="error">Störung</SelectItem>
+                            <SelectItem value="active">{t('andon.status.active')}</SelectItem>
+                            <SelectItem value="maintenance">{t('andon.status.maintenance')}</SelectItem>
+                            <SelectItem value="error">{t('andon.status.error')}</SelectItem>
                           </SelectContent>
                         </Select>
                         <FormMessage />
@@ -169,7 +171,7 @@ const AndonPage = () => {
                     name="efficiency"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Effizienz (%)</FormLabel>
+                        <FormLabel>{t('andon.efficiency')}</FormLabel>
                         <FormControl>
                           <Input 
                             type="number" 
@@ -185,7 +187,7 @@ const AndonPage = () => {
                   />
                   
                   <DialogFooter>
-                    <Button type="submit">Erstellen</Button>
+                    <Button type="submit">{t('common.create')}</Button>
                   </DialogFooter>
                 </form>
               </Form>
@@ -196,7 +198,7 @@ const AndonPage = () => {
 
       {isLoading ? (
         <div className="flex items-center justify-center p-8">
-          <div className="text-center">Lade Andon-Stationen...</div>
+          <div className="text-center">{t('common.loading')}</div>
         </div>
       ) : stations.length === 0 ? (
         <div className="flex flex-col items-center justify-center p-8 text-center">

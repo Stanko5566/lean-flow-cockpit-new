@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Plus, Trash2 } from "lucide-react";
 import {
@@ -8,6 +8,16 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 import { useValueStreams, CreateValueStreamDto } from "@/hooks/useValueStreams";
 import {
   Dialog,
@@ -30,6 +40,7 @@ import { Input } from "@/components/ui/input";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
+import { useTranslation } from "react-i18next";
 
 const formSchema = z.object({
   name: z.string().min(2, "Der Name muss mindestens 2 Zeichen haben"),
@@ -46,6 +57,9 @@ type FormData = z.infer<typeof formSchema>;
 const ValueStreamPage = () => {
   const { streams, isLoading, createStream, deleteStream } = useValueStreams();
   const [open, setOpen] = useState(false);
+  const { t } = useTranslation();
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [streamToDelete, setStreamToDelete] = useState<string | null>(null);
 
   const form = useForm<FormData>({
     resolver: zodResolver(formSchema),
@@ -79,6 +93,19 @@ const ValueStreamPage = () => {
   // Helper function to calculate improvement percentage
   const calculateImprovement = (current: number, target: number) => {
     return ((current - target) / current * 100).toFixed(0);
+  };
+
+  const handleDeleteClick = (id: string) => {
+    setStreamToDelete(id);
+    setDeleteDialogOpen(true);
+  };
+
+  const confirmDelete = () => {
+    if (streamToDelete) {
+      deleteStream(streamToDelete);
+      setDeleteDialogOpen(false);
+      setStreamToDelete(null);
+    }
   };
 
   return (
@@ -235,7 +262,7 @@ const ValueStreamPage = () => {
 
       {isLoading ? (
         <div className="flex items-center justify-center p-8">
-          <div className="text-center">Lade Wertstromanalysen...</div>
+          <div className="text-center">{t('common.loading')}</div>
         </div>
       ) : streams.length === 0 ? (
         <div className="flex flex-col items-center justify-center p-8 text-center">
@@ -257,7 +284,7 @@ const ValueStreamPage = () => {
                   <Button
                     variant="ghost"
                     size="icon"
-                    onClick={() => deleteStream(stream.id)}
+                    onClick={() => handleDeleteClick(stream.id)}
                     className="h-8 w-8"
                   >
                     <Trash2 className="h-4 w-4" />
@@ -285,6 +312,23 @@ const ValueStreamPage = () => {
           ))}
         </div>
       )}
+
+      <AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>{t('common.confirm')}</AlertDialogTitle>
+            <AlertDialogDescription>
+              {t('common.deleteConfirmation')}
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>{t('common.cancel')}</AlertDialogCancel>
+            <AlertDialogAction onClick={confirmDelete} className="bg-destructive text-destructive-foreground">
+              {t('common.delete')}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 };

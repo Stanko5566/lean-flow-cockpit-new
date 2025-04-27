@@ -1,4 +1,3 @@
-
 import React from "react";
 import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
@@ -7,6 +6,7 @@ import KpiCard from "@/components/dashboard/KpiCard";
 import ProgressCard from "@/components/dashboard/ProgressCard";
 import LeanInitiativeCard from "@/components/dashboard/LeanInitiativeCard";
 import { useLeanInitiatives } from "@/hooks/useLeanInitiatives";
+import { useTranslation } from "react-i18next";
 import {
   Dialog,
   DialogContent,
@@ -49,6 +49,7 @@ type FormData = z.infer<typeof formSchema>;
 const Dashboard = () => {
   const { initiatives, isLoading, createInitiative } = useLeanInitiatives();
   const [open, setOpen] = React.useState(false);
+  const { t } = useTranslation();
 
   const form = useForm<FormData>({
     resolver: zodResolver(formSchema),
@@ -79,16 +80,16 @@ const Dashboard = () => {
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-semibold tracking-tight">Dashboard</h1>
+        <h1 className="text-2xl font-semibold tracking-tight">{t('dashboard.title')}</h1>
         <Dialog open={open} onOpenChange={setOpen}>
           <DialogTrigger asChild>
             <Button className="flex items-center gap-1">
-              <Plus className="h-4 w-4" /> Neue Initiative
+              <Plus className="h-4 w-4" /> {t('dashboard.newInitiative')}
             </Button>
           </DialogTrigger>
           <DialogContent>
             <DialogHeader>
-              <DialogTitle>Neue Lean-Initiative erstellen</DialogTitle>
+              <DialogTitle>{t('dashboard.createInitiative')}</DialogTitle>
             </DialogHeader>
             <Form {...form}>
               <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">

@@ -30,6 +30,7 @@ import { Input } from "@/components/ui/input";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
+import { useTranslation } from "react-i18next";
 
 const formSchema = z.object({
   title: z.string().min(2, "Der Titel muss mindestens 2 Zeichen haben"),
@@ -46,6 +47,7 @@ type FormData = z.infer<typeof formSchema>;
 const FiveS = () => {
   const { checklists, isLoading, createChecklist, deleteChecklist } = use5SChecklists();
   const [open, setOpen] = useState(false);
+  const { t } = useTranslation();
 
   const form = useForm<FormData>({
     resolver: zodResolver(formSchema),
@@ -87,18 +89,18 @@ const FiveS = () => {
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-semibold tracking-tight">5S Checklisten</h1>
+        <h1 className="text-2xl font-semibold tracking-tight">{t('5s.title')}</h1>
         <Dialog open={open} onOpenChange={setOpen}>
           <DialogTrigger asChild>
             <Button className="flex items-center gap-1">
-              <Plus className="h-4 w-4" /> Neue Checkliste
+              <Plus className="h-4 w-4" /> {t('5s.newChecklist')}
             </Button>
           </DialogTrigger>
           <DialogContent>
             <DialogHeader>
-              <DialogTitle>Neue 5S Checkliste erstellen</DialogTitle>
+              <DialogTitle>{t('5s.createChecklist')}</DialogTitle>
               <DialogDescription>
-                Erstellen Sie eine neue 5S Checkliste mit Bewertungen für jeden S-Bereich.
+                {t('5s.createDescription')}
               </DialogDescription>
             </DialogHeader>
             <Form {...form}>
@@ -108,9 +110,9 @@ const FiveS = () => {
                   name="title"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Titel</FormLabel>
+                      <FormLabel>{t('common.title')}</FormLabel>
                       <FormControl>
-                        <Input placeholder="Titel der Checkliste" {...field} />
+                        <Input placeholder={t('5s.titlePlaceholder')} {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -121,9 +123,9 @@ const FiveS = () => {
                   name="description"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Beschreibung</FormLabel>
+                      <FormLabel>{t('common.description')}</FormLabel>
                       <FormControl>
-                        <Input placeholder="Kurze Beschreibung" {...field} />
+                        <Input placeholder={t('5s.descriptionPlaceholder')} {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -137,7 +139,7 @@ const FiveS = () => {
                     name={field as keyof FormData}
                     render={({ field: { onChange, value } }) => (
                       <FormItem>
-                        <FormLabel className="capitalize">{field} Score (%)</FormLabel>
+                        <FormLabel className="capitalize">{t(`5s.${field}`)} {t('5s.score')} (%)</FormLabel>
                         <FormControl>
                           <Input
                             type="number"
@@ -153,7 +155,7 @@ const FiveS = () => {
                   />
                 ))}
                 <DialogFooter>
-                  <Button type="submit">Erstellen</Button>
+                  <Button type="submit">{t('common.create')}</Button>
                 </DialogFooter>
               </form>
             </Form>
@@ -163,13 +165,13 @@ const FiveS = () => {
 
       {isLoading ? (
         <div className="flex items-center justify-center p-8">
-          <div className="text-center">Lade 5S Checklisten...</div>
+          <div className="text-center">{t('common.loading')}</div>
         </div>
       ) : checklists.length === 0 ? (
         <div className="flex flex-col items-center justify-center p-8 text-center">
-          <p className="text-muted-foreground mb-4">Keine 5S Checklisten gefunden</p>
+          <p className="text-muted-foreground mb-4">{t('5s.noChecklists')}</p>
           <Button onClick={() => setOpen(true)} variant="outline">
-            Erste 5S Checkliste erstellen
+            {t('5s.createFirstChecklist')}
           </Button>
         </div>
       ) : (
@@ -195,24 +197,38 @@ const FiveS = () => {
               <CardContent>
                 <div className="space-y-2">
                   <div className="flex justify-between">
-                    <span>Seiri (Sortieren)</span>
+                    <span>{t('5s.seiri')}</span>
                     <span className={getScoreClass(checklist.scores.seiri)}>{checklist.scores.seiri}%</span>
                   </div>
                   <div className="flex justify-between">
-                    <span>Seiton (Systematisieren)</span>
+                    <span>{t('5s.seiton')}</span>
                     <span className={getScoreClass(checklist.scores.seiton)}>{checklist.scores.seiton}%</span>
                   </div>
                   <div className="flex justify-between">
-                    <span>Seiso (Säubern)</span>
+                    <span>{t('5s.seiso')}</span>
                     <span className={getScoreClass(checklist.scores.seiso)}>{checklist.scores.seiso}%</span>
                   </div>
                   <div className="flex justify-between">
-                    <span>Seiketsu (Standardisieren)</span>
+                    <span>{t('5s.seiketsu')}</span>
                     <span className={getScoreClass(checklist.scores.seiketsu)}>{checklist.scores.seiketsu}%</span>
                   </div>
                   <div className="flex justify-between">
-                    <span>Shitsuke (Selbstdisziplin)</span>
+                    <span>{t('5s.shitsuke')}</span>
                     <span className={getScoreClass(checklist.scores.shitsuke)}>{checklist.scores.shitsuke}%</span>
+                  </div>
+                  <div className="mt-2 pt-2 border-t">
+                    <div className="flex justify-between font-semibold">
+                      <span>{t('5s.totalScore')}</span>
+                      <span>
+                        {Math.round(
+                          (checklist.scores.seiri +
+                            checklist.scores.seiton +
+                            checklist.scores.seiso +
+                            checklist.scores.seiketsu +
+                            checklist.scores.shitsuke) / 5
+                        )}%
+                      </span>
+                    </div>
                   </div>
                 </div>
               </CardContent>
