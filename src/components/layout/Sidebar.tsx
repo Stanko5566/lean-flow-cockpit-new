@@ -40,54 +40,26 @@ interface NavItemProps {
   icon: React.ElementType;
   label: string;
   active?: boolean;
-  onEdit?: () => void;
-  isAdmin?: boolean;
-  isHidden?: boolean;
 }
 
 const NavItem: React.FC<NavItemProps> = ({ 
   to, 
   icon: Icon, 
   label, 
-  active, 
-  onEdit, 
-  isAdmin = false,
-  isHidden = false
+  active
 }) => (
-  <div className="flex items-center w-full">
-    <Link to={to} className="flex-1">
-      <Button
-        variant="ghost"
-        className={cn(
-          "w-full justify-start gap-3 px-3 text-left font-normal",
-          active ? "bg-primary/10 text-primary" : "hover:bg-primary/5",
-          isHidden && "opacity-50"
-        )}
-      >
-        <Icon className="h-5 w-5" />
-        <span>{label}</span>
-      </Button>
-    </Link>
-    {isAdmin && onEdit && (
-      <TooltipProvider>
-        <Tooltip>
-          <TooltipTrigger asChild>
-            <Button 
-              variant="ghost" 
-              size="icon" 
-              className="h-8 w-8 ml-1"
-              onClick={onEdit}
-            >
-              <Edit className="h-4 w-4" />
-            </Button>
-          </TooltipTrigger>
-          <TooltipContent>
-            <p>Sichtbarkeit ändern</p>
-          </TooltipContent>
-        </Tooltip>
-      </TooltipProvider>
-    )}
-  </div>
+  <Link to={to} className="w-full">
+    <Button
+      variant="ghost"
+      className={cn(
+        "w-full justify-start gap-3 px-3 text-left font-normal",
+        active ? "bg-primary/10 text-primary" : "hover:bg-primary/5"
+      )}
+    >
+      <Icon className="h-5 w-5" />
+      <span>{label}</span>
+    </Button>
+  </Link>
 );
 
 interface SidebarProps {
@@ -152,79 +124,54 @@ const Sidebar: React.FC<SidebarProps> = ({
               <div className="mb-2 px-3 text-xs font-medium text-muted-foreground">
                 Übersicht
               </div>
-              {SIDEBAR_ITEMS.filter(item => item.id === 'dashboard' || item.id === 'pdca').map(item => {
+              {SIDEBAR_ITEMS.filter(item => {
                 const isHidden = isItemHidden(item.id);
-                if (isHidden && !isAdmin) return null;
-                return (
-                  <NavItem 
-                    key={item.id}
-                    to={item.path}
-                    icon={getIconForItem(item.id)}
-                    label={item.label}
-                    active={item.path === '/'}
-                    isAdmin={isAdmin}
-                    isHidden={isHidden}
-                    onEdit={() => {
-                      if (isAdmin) {
-                        toggleItem(item.id, !isHidden);
-                      }
-                    }}
-                  />
-                );
-              })}
+                return !isHidden && (item.id === 'dashboard' || item.id === 'pdca');
+              }).map(item => (
+                <NavItem 
+                  key={item.id}
+                  to={item.path}
+                  icon={getIconForItem(item.id)}
+                  label={item.label}
+                  active={item.path === '/'}
+                />
+              ))}
               
               <div className="my-2 px-3 text-xs font-medium text-muted-foreground">
                 Methoden
               </div>
-              {SIDEBAR_ITEMS.filter(item => 
-                ['5s', 'kaizen', 'valuestream', 'kanban', 'andon', 'gemba', 'standards', 'a3', 'tpm'].includes(item.id)
-              ).map(item => {
+              {SIDEBAR_ITEMS.filter(item => {
                 const isHidden = isItemHidden(item.id);
-                if (isHidden && !isAdmin) return null;
-                return (
-                  <NavItem 
-                    key={item.id}
-                    to={item.path}
-                    icon={getIconForItem(item.id)}
-                    label={item.label}
-                    isAdmin={isAdmin}
-                    isHidden={isHidden}
-                    onEdit={() => {
-                      if (isAdmin) {
-                        toggleItem(item.id, !isHidden);
-                      }
-                    }}
-                  />
-                );
-              })}
+                return !isHidden && 
+                  ['5s', 'kaizen', 'valuestream', 'kanban', 'andon', 'gemba', 'standards', 'a3', 'tpm'].includes(item.id);
+              }).map(item => (
+                <NavItem 
+                  key={item.id}
+                  to={item.path}
+                  icon={getIconForItem(item.id)}
+                  label={item.label}
+                />
+              ))}
               
               <div className="my-2 px-3 text-xs font-medium text-muted-foreground">
                 System
               </div>
-              {SIDEBAR_ITEMS.filter(item => item.id === 'settings').map(item => {
+              {SIDEBAR_ITEMS.filter(item => {
                 const isHidden = isItemHidden(item.id);
-                if (isHidden && !isAdmin) return null;
-                return (
-                  <NavItem 
-                    key={item.id}
-                    to={item.path}
-                    icon={getIconForItem(item.id)}
-                    label={item.label}
-                    isAdmin={isAdmin}
-                    isHidden={isHidden}
-                    onEdit={() => {
-                      if (isAdmin) {
-                        toggleItem(item.id, !isHidden);
-                      }
-                    }}
-                  />
-                );
-              })}
+                return !isHidden && item.id === 'settings';
+              }).map(item => (
+                <NavItem 
+                  key={item.id}
+                  to={item.path}
+                  icon={getIconForItem(item.id)}
+                  label={item.label}
+                />
+              ))}
               
               {isAdmin && (
                 <div className="mt-4 px-3">
                   <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
+                    <DropdownMenuTrigger asChild data-sidebar="menu-verwalten">
                       <Button 
                         variant="outline" 
                         size="sm" 
@@ -261,7 +208,8 @@ const Sidebar: React.FC<SidebarProps> = ({
             <>
               {SIDEBAR_ITEMS.filter(item => {
                 const isHidden = isItemHidden(item.id);
-                return !isHidden || isAdmin;
+                // Only show items that are not hidden
+                return !isHidden;
               }).map(item => (
                 <div key={item.id} className="flex justify-center py-2">
                   <TooltipProvider>
@@ -271,10 +219,7 @@ const Sidebar: React.FC<SidebarProps> = ({
                           <Button
                             variant="ghost"
                             size="icon"
-                            className={cn(
-                              "h-10 w-10",
-                              isItemHidden(item.id) && "opacity-50"
-                            )}
+                            className="h-10 w-10"
                           >
                             {React.createElement(getIconForItem(item.id), { className: "h-5 w-5" })}
                           </Button>
