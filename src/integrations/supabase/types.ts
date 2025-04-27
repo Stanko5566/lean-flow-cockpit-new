@@ -44,25 +44,31 @@ export type Database = {
       }
       gemba_walks: {
         Row: {
-          created_at: string
           id: string
-          location: string
-          observations: Json
-          walk_date: string
+          title: string
+          description: string
+          area: string
+          observations: string[]
+          created_at: string
+          updated_at: string
         }
         Insert: {
-          created_at?: string
           id?: string
-          location: string
-          observations: Json
-          walk_date: string
+          title: string
+          description: string
+          area: string
+          observations: string[]
+          created_at?: string
+          updated_at?: string
         }
         Update: {
-          created_at?: string
           id?: string
-          location?: string
-          observations?: Json
-          walk_date?: string
+          title?: string
+          description?: string
+          area?: string
+          observations?: string[]
+          created_at?: string
+          updated_at?: string
         }
         Relationships: []
       }
