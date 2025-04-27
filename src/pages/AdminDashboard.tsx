@@ -142,15 +142,47 @@ const AdminDashboard = () => {
         throw new Error("User creation failed");
       }
 
-      // 2. Add the user role to the user_roles table
-      const { error: roleError } = await supabase
+      // Check if the user already has a role assigned
+      const { data: existingRole, error: checkError } = await supabase
         .from('user_roles')
-        .insert({
-          user_id: userData.user.id,
-          role: role,
-        });
+        .select('*')
+        .eq('user_id', userData.user.id);
+      
+      if (checkError) {
+        throw checkError;
+      }
 
-      if (roleError) throw roleError;
+      // If the user already has a role, update it instead of inserting
+      if (existingRole && existingRole.length > 0) {
+        const { error: updateError } = await supabase
+          .from('user_roles')
+          .update({ role: role })
+          .eq('user_id', userData.user.id);
+          
+        if (updateError) throw updateError;
+      } else {
+        // 2. Add the user role to the user_roles table if they don't have one
+        const { error: insertError } = await supabase
+          .from('user_roles')
+          .insert({
+            user_id: userData.user.id,
+            role: role,
+          });
+          
+        if (insertError) {
+          // If it's a unique constraint error, try to update instead
+          if (insertError.message.includes('user_roles_user_id_role_key')) {
+            const { error: updateError } = await supabase
+              .from('user_roles')
+              .update({ role: role })
+              .eq('user_id', userData.user.id);
+              
+            if (updateError) throw updateError;
+          } else {
+            throw insertError;
+          }
+        }
+      }
 
       toast({
         title: "Success",
