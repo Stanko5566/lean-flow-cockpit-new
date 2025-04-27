@@ -1,0 +1,122 @@
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 216 12% 34%; /* Base text color (lean.gray) */
+
+    --card: 0 0% 100%;
+    --card-foreground: 216 12% 34%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 216 12% 34%;
+
+    --primary: 197 74% 49%; /* lean.blue */
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 0 0% 95%; /* lean.gray.light */
+    --secondary-foreground: 216 12% 34%;
+
+    --muted: 0 0% 95%;
+    --muted-foreground: 216 10% 60%;
+
+    --accent: 197 74% 49%;
+    --accent-foreground: 0 0% 100%;
+
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 0 0% 89%;
+    --input: 0 0% 89%;
+    --ring: 197 74% 49%;
+
+    --radius: 0.5rem;
+
+    --sidebar-background: 0 0% 98%;
+    --sidebar-foreground: 216 12% 34%;
+    --sidebar-primary: 197 74% 49%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 0 0% 95%;
+    --sidebar-accent-foreground: 216 12% 34%;
+    --sidebar-border: 0 0% 89%;
+    --sidebar-ring: 197 74% 49%;
+  }
+
+  .dark {
+    --background: 216 10% 14%;
+    --foreground: 0 0% 95%;
+
+    --card: 216 12% 17%;
+    --card-foreground: 0 0% 95%;
+
+    --popover: 216 12% 17%;
+    --popover-foreground: 0 0% 95%;
+
+    --primary: 197 74% 49%;
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 216 10% 22%;
+    --secondary-foreground: 0 0% 95%;
+
+    --muted: 216 10% 22%;
+    --muted-foreground: 216 5% 65%;
+
+    --accent: 197 74% 49%;
+    --accent-foreground: 0 0% 100%;
+
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 0 0% 95%;
+
+    --border: 216 10% 22%;
+    --input: 216 10% 22%;
+    --ring: 197 74% 49%;
+
+    --sidebar-background: 216 12% 17%;
+    --sidebar-foreground: 0 0% 95%;
+    --sidebar-primary: 197 74% 49%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 216 10% 22%;
+    --sidebar-accent-foreground: 0 0% 95%;
+    --sidebar-border: 216 10% 22%;
+    --sidebar-ring: 197 74% 49%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+
+@layer components {
+  .status-indicator {
+    @apply h-3 w-3 rounded-full;
+  }
+  
+  .status-green {
+    @apply bg-lean-status-green;
+  }
+  
+  .status-yellow {
+    @apply bg-lean-status-yellow;
+  }
+  
+  .status-red {
+    @apply bg-lean-status-red;
+  }
+
+  .lean-card {
+    @apply rounded-lg border bg-card p-6 shadow-sm transition-all hover:shadow-md;
+  }
+
+  .dashboard-grid {
+    @apply grid gap-4 md:grid-cols-2 lg:grid-cols-3;
+  }
+}
