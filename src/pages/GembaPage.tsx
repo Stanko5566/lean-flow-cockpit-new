@@ -1,6 +1,5 @@
 import React from "react";
-import { Button } from "@/components/ui/button";
-import { Plus, Clock, Trash2 } from "lucide-react";
+import { Clock, Trash2 } from "lucide-react";
 import {
   Card,
   CardContent,
@@ -8,13 +7,16 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { useGembaWalks } from "@/hooks/useGembaWalks";
+import { Button } from "@/components/ui/button";
+import { CreateGembaDialog } from "@/components/gemba/CreateGembaDialog";
 
 const GembaPage = () => {
-  // Mock delete function for demonstration
-  const handleDelete = (title: string) => {
+  const { walks, isLoading, deleteWalk } = useGembaWalks();
+
+  const handleDelete = (id: string, title: string) => {
     if (window.confirm(`Sind Sie sicher, dass Sie "${title}" löschen möchten?`)) {
-      // Here you would call your delete function from a hook
-      console.log(`Deleting ${title}`);
+      deleteWalk(id);
     }
   };
 
@@ -22,80 +24,60 @@ const GembaPage = () => {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <h1 className="text-2xl font-semibold tracking-tight">Gemba Walks</h1>
-        <Button className="flex items-center gap-1">
-          <Plus className="h-4 w-4" /> Neuer Walk
-        </Button>
+        <CreateGembaDialog />
       </div>
 
-      <div className="grid gap-4 md:grid-cols-2">
-        <Card>
-          <CardHeader>
-            <div className="flex items-center justify-between">
-              <div>
-                <CardTitle>Produktionshalle A</CardTitle>
-                <CardDescription>Letzte Begehung: 23.04.2025</CardDescription>
-              </div>
-              <div className="flex space-x-2">
-                <Clock className="h-4 w-4 text-muted-foreground" />
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  onClick={() => handleDelete("Produktionshalle A")}
-                  className="h-8 w-8"
-                >
-                  <Trash2 className="h-4 w-4" />
-                </Button>
-              </div>
+      {isLoading ? (
+        <div>Laden...</div>
+      ) : (
+        <div className="grid gap-4 md:grid-cols-2">
+          {walks.length > 0 ? (
+            walks.map((walk) => (
+              <Card key={walk.id}>
+                <CardHeader>
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <CardTitle>{walk.title}</CardTitle>
+                      <CardDescription>Bereich: {walk.area}</CardDescription>
+                    </div>
+                    <div className="flex space-x-2">
+                      <Clock className="h-4 w-4 text-muted-foreground" />
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        onClick={() => handleDelete(walk.id, walk.title)}
+                        className="h-8 w-8"
+                      >
+                        <Trash2 className="h-4 w-4" />
+                      </Button>
+                    </div>
+                  </div>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-2">
+                    <div className="text-sm">
+                      <span className="font-medium">Beschreibung:</span>
+                      <p className="mt-1 text-muted-foreground">{walk.description}</p>
+                    </div>
+                    <div className="text-sm">
+                      <span className="font-medium">Beobachtungen:</span>
+                      <ul className="list-disc pl-4 mt-1 text-muted-foreground">
+                        {walk.observations.map((observation, index) => (
+                          <li key={index}>{observation}</li>
+                        ))}
+                      </ul>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            ))
+          ) : (
+            <div className="col-span-2 text-center py-6 text-muted-foreground">
+              Keine Gemba Walks gefunden. Erstellen Sie einen neuen Walk mit dem Button oben rechts.
             </div>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-2">
-              <div className="text-sm">
-                <span className="font-medium">Beobachtungen:</span>
-                <ul className="list-disc pl-4 mt-1 text-muted-foreground">
-                  <li>Materialfluss optimierungsbedürftig</li>
-                  <li>5S Standards werden eingehalten</li>
-                  <li>Werkzeugorganisation vorbildlich</li>
-                </ul>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader>
-            <div className="flex items-center justify-between">
-              <div>
-                <CardTitle>Logistikbereich</CardTitle>
-                <CardDescription>Letzte Begehung: 22.04.2025</CardDescription>
-              </div>
-              <div className="flex space-x-2">
-                <Clock className="h-4 w-4 text-muted-foreground" />
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  onClick={() => handleDelete("Logistikbereich")}
-                  className="h-8 w-8"
-                >
-                  <Trash2 className="h-4 w-4" />
-                </Button>
-              </div>
-            </div>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-2">
-              <div className="text-sm">
-                <span className="font-medium">Beobachtungen:</span>
-                <ul className="list-disc pl-4 mt-1 text-muted-foreground">
-                  <li>Lagerbestände über Maximum</li>
-                  <li>Transportwege optimiert</li>
-                  <li>Neue Beschriftung notwendig</li>
-                </ul>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-      </div>
+          )}
+        </div>
+      )}
     </div>
   );
 };

@@ -246,6 +246,129 @@ export type Database = {
         }
         Relationships: []
       }
+      five_s_checklists: {
+        Row: {
+          created_at: string
+          description: string
+          id: string
+          scores: Json
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          description: string
+          id?: string
+          scores: Json
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          description?: string
+          id?: string
+          scores?: Json
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      kaizen_items: {
+        Row: {
+          completion_date: string | null
+          created_at: string
+          description: string
+          id: string
+          responsible: string | null
+          status: string
+          submitter: string | null
+          title: string
+        }
+        Insert: {
+          completion_date?: string | null
+          created_at?: string
+          description: string
+          id?: string
+          responsible?: string | null
+          status: string
+          submitter?: string | null
+          title: string
+        }
+        Update: {
+          completion_date?: string | null
+          created_at?: string
+          description?: string
+          id?: string
+          responsible?: string | null
+          status?: string
+          submitter?: string | null
+          title?: string
+        }
+        Relationships: []
+      }
+      value_streams: {
+        Row: {
+          created_at: string
+          family: string
+          id: string
+          last_updated: string
+          lead_time: number
+          lead_time_target: number
+          name: string
+          va_index: number
+          value_added_time: number
+        }
+        Insert: {
+          created_at?: string
+          family: string
+          id?: string
+          last_updated?: string
+          lead_time: number
+          lead_time_target: number
+          name: string
+          va_index: number
+          value_added_time: number
+        }
+        Update: {
+          created_at?: string
+          family?: string
+          id?: string
+          last_updated?: string
+          lead_time?: number
+          lead_time_target?: number
+          name?: string
+          va_index?: number
+          value_added_time?: number
+        }
+        Relationships: []
+      }
+      andon_stations: {
+        Row: {
+          created_at: string
+          efficiency: number
+          id: string
+          last_updated: string
+          name: string
+          status: string
+        }
+        Insert: {
+          created_at?: string
+          efficiency: number
+          id?: string
+          last_updated?: string
+          name: string
+          status: string
+        }
+        Update: {
+          created_at?: string
+          efficiency?: number
+          id?: string
+          last_updated?: string
+          name?: string
+          status?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never

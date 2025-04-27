@@ -1,6 +1,5 @@
 import React from "react";
-import { Button } from "@/components/ui/button";
-import { Plus, FileChartColumn, Trash2 } from "lucide-react";
+import { FileChartColumn, Trash2 } from "lucide-react";
 import {
   Card,
   CardContent,
@@ -8,13 +7,17 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { useA3Reports } from "@/hooks/useA3Reports";
+import { formatDate } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
+import { CreateA3Dialog } from "@/components/a3/CreateA3Dialog";
 
 const A3Page = () => {
-  // Mock delete function for demonstration
-  const handleDelete = (title: string) => {
+  const { reports, isLoading, deleteReport } = useA3Reports();
+
+  const handleDelete = (id: string, title: string) => {
     if (window.confirm(`Sind Sie sicher, dass Sie "${title}" löschen möchten?`)) {
-      // Here you would call your delete function from a hook
-      console.log(`Deleting ${title}`);
+      deleteReport(id);
     }
   };
 
@@ -22,80 +25,57 @@ const A3Page = () => {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <h1 className="text-2xl font-semibold tracking-tight">A3 Reports</h1>
-        <Button className="flex items-center gap-1">
-          <Plus className="h-4 w-4" /> Neuer Report
-        </Button>
+        <CreateA3Dialog />
       </div>
 
-      <div className="grid gap-4 md:grid-cols-2">
-        <Card>
-          <CardHeader>
-            <div className="flex items-center justify-between">
-              <div>
-                <CardTitle>Ausschussreduzierung</CardTitle>
-                <CardDescription>Erstellt am 15.04.2025</CardDescription>
-              </div>
-              <div className="flex space-x-2">
-                <FileChartColumn className="h-4 w-4 text-muted-foreground" />
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  onClick={() => handleDelete("Ausschussreduzierung")}
-                  className="h-8 w-8"
-                >
-                  <Trash2 className="h-4 w-4" />
-                </Button>
-              </div>
+      {isLoading ? (
+        <div>Laden...</div>
+      ) : (
+        <div className="grid gap-4 md:grid-cols-2">
+          {reports.length > 0 ? (
+            reports.map((report) => (
+              <Card key={report.id}>
+                <CardHeader>
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <CardTitle>{report.title}</CardTitle>
+                      <CardDescription>Erstellt am {formatDate(report.created_at)}</CardDescription>
+                    </div>
+                    <div className="flex space-x-2">
+                      <FileChartColumn className="h-4 w-4 text-muted-foreground" />
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        onClick={() => handleDelete(report.id, report.title)}
+                        className="h-8 w-8"
+                      >
+                        <Trash2 className="h-4 w-4" />
+                      </Button>
+                    </div>
+                  </div>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-2">
+                    <div className="text-sm">
+                      <span className="font-medium">Status: {report.status}</span>
+                      <div className="mt-2 space-y-1 text-muted-foreground">
+                        <p>Ziel: {report.goal}</p>
+                        <p>Team: {report.team.join(', ')}</p>
+                        {report.deadline && <p>Deadline: {formatDate(report.deadline)}</p>}
+                        {report.result && <p>Ergebnis: {report.result}</p>}
+                      </div>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            ))
+          ) : (
+            <div className="col-span-2 text-center py-6 text-muted-foreground">
+              Keine A3 Reports gefunden. Erstellen Sie einen neuen Report mit dem Button oben rechts.
             </div>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-2">
-              <div className="text-sm">
-                <span className="font-medium">Status: In Bearbeitung</span>
-                <div className="mt-2 space-y-1 text-muted-foreground">
-                  <p>Ziel: Reduzierung der Ausschussquote um 50%</p>
-                  <p>Team: Produktion, Qualität</p>
-                  <p>Deadline: 30.06.2025</p>
-                </div>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader>
-            <div className="flex items-center justify-between">
-              <div>
-                <CardTitle>Rüstzeitoptimierung</CardTitle>
-                <CardDescription>Erstellt am 10.04.2025</CardDescription>
-              </div>
-              <div className="flex space-x-2">
-                <FileChartColumn className="h-4 w-4 text-muted-foreground" />
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  onClick={() => handleDelete("Rüstzeitoptimierung")}
-                  className="h-8 w-8"
-                >
-                  <Trash2 className="h-4 w-4" />
-                </Button>
-              </div>
-            </div>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-2">
-              <div className="text-sm">
-                <span className="font-medium">Status: Abgeschlossen</span>
-                <div className="mt-2 space-y-1 text-muted-foreground">
-                  <p>Ziel: Rüstzeit um 30% reduzieren</p>
-                  <p>Team: Produktion, Instandhaltung</p>
-                  <p>Ergebnis: 35% Reduktion erreicht</p>
-                </div>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-      </div>
+          )}
+        </div>
+      )}
     </div>
   );
 };
