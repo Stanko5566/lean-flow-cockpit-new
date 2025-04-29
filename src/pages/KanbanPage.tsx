@@ -48,7 +48,7 @@ const formSchema = z.object({
 type FormData = z.infer<typeof formSchema>;
 
 const KanbanPage = () => {
-  const { tasks, isLoading, createTask, updateTask, deleteTask } = useKanbanTasks();
+  const { tasks, createTask, updateTask, deleteTask } = useKanbanTasks();
   const [open, setOpen] = React.useState(false);
   const { t } = useTranslation();
 
