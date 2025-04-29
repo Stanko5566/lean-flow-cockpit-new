@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
@@ -9,7 +9,6 @@ import {
   AccordionItem,
   AccordionTrigger 
 } from "@/components/ui/accordion";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { useRole } from '@/hooks/useRole';
 import { Link } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
